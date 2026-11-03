@@ -31,16 +31,17 @@ PROJECTS:
 3. Guro.AI: An AI lesson plan generator for teachers (Next.js/OpenAI).
 4. SEO Simulator: An interactive tool to demonstrate SEO optimization techniques (React).
 5. AI Simulator: A wizard to design custom AI architectures (React/Flow).
-6. SkillFoundri: A project-based learning platform with mentorship (React/Node/MongoDB) - NOT WordPress.
+6. SkillFoundri (now LodsTech, https://lodstech-io.vercel.app/): A project-based learning platform with mentorship - NOT WordPress. MJR is co-founder and CTO / Lead Developer.
 7. Decor: High-end Home Decor E-commerce Store (WordPress/WooCommerce).
 8. Femme: Trendy Women's Fashion Boutique (WordPress/WooCommerce).
 9. Gents: Premium Men's Apparel Shop (WordPress/WooCommerce).
 10. Plush: Luxury Lifestyle & Accessories Brand (WordPress).
+11. MedOps: Internal patient operations app built for ACCC (American Critical Care Consult) while working there as Patient Coordinator, Jan–Aug 2026 (Next.js/TypeScript/Supabase).
 
 CONTACT:
-- Email: contact@developer.com
-- GitHub: github.com/developer
-- LinkedIn: linkedin.com/in/developer
+- Email: mjr.elayron@gmail.com
+- GitHub: github.com/bonch223
+- LinkedIn: linkedin.com/in/melvin-jr-elayron
 
 SCHEDULING:
 - If a user expresses interest in working together, hiring the developer, or discussing a project, ask if they would like to schedule a call.

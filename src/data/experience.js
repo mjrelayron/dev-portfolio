@@ -1,9 +1,15 @@
 export const EXPERIENCE_DATA = [
     {
         year: '2024-Present',
-        title: 'COO & Lead Developer',
-        company: 'SkillFoundri',
-        description: 'Co-founding and leading an innovative ed-tech startup. Driving product development and scaling the platform.'
+        title: 'CTO & Lead Developer',
+        company: 'SkillFoundri / LodsTech.io',
+        description: 'Co-founder and CTO / Lead Developer of SkillFoundri, which now continues as LodsTech (lodstech-io.vercel.app). Driving product development and the platform build.'
+    },
+    {
+        year: 'Jan 2026-Aug 2026',
+        title: 'Patient Coordinator',
+        company: 'ACCC (American Critical Care Consult)',
+        description: 'Patient coordination for ACCC. Developed MedOps, an internal operations app for patients, visits and recertifications (Next.js, TypeScript, Supabase).'
     },
     {
         year: '2023-2024',

@@ -6,7 +6,7 @@ export const profile = {
   name: 'MJR Elayron',
   fullName: 'Melvin Jr. Elayron',
   handle: 'mjr',
-  headline: 'Full-Stack Developer, Automation Architect & COO of SkillFoundri',
+  headline: 'Full-Stack Developer, Automation Architect & CTO of SkillFoundri / LodsTech',
   shortBio:
     'I design and build web products, AI tools and automations — and I lead the teams that ship them.',
   roles: [
@@ -21,7 +21,7 @@ export const profile = {
   story: [
     'My journey began in 2015 when I was recognized as "Programmer-of-the-Year" at Davao Oriental State University. This early recognition fueled my passion for technology and innovation.',
     "Over the years, I've evolved from a passionate programmer to a Tech Director, leading teams and driving digital transformation across various organizations.",
-    "Today, I'm co-founding and leading SkillFoundri as COO and Lead Developer — an ed-tech startup built around project-based learning and industry-relevant skill development.",
+    "Today, I'm CTO and Lead Developer at SkillFoundri — the ed-tech startup I co-founded, built around project-based learning — which now continues as LodsTech.",
   ],
   stats: [
     { label: 'Years experience', value: '7+' },

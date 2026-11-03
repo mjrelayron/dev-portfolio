@@ -17,12 +17,20 @@ export const experience: Role[] = [
   {
     id: 'skillfoundri',
     period: '2024 – Present',
-    title: 'COO & Lead Developer',
-    company: 'SkillFoundri',
+    title: 'CTO & Lead Developer',
+    company: 'SkillFoundri · LodsTech.io',
     logo: companyAssets.skillfoundriLogo,
     summary:
-      'Co-founding and leading an ed-tech startup that combines features of Upwork, Asana, Blackboard and Coursera. Driving product development, strategic partnerships and scaling the platform.',
+      'Co-founder and CTO / Lead Developer of SkillFoundri — an ed-tech platform combining features of Upwork, Asana, Blackboard and Coursera — which now continues as LodsTech.',
     highlights: ['Co-founded the ed-tech startup', 'Led full-stack development', 'Securing strategic partnerships', 'Building a comprehensive learning platform'],
+  },
+  {
+    id: 'accc',
+    period: 'Jan 2026 – Aug 2026',
+    title: 'Patient Coordinator',
+    company: 'ACCC · American Critical Care Consult',
+    summary: 'Patient coordination for ACCC — and developed MedOps, the internal app the team used for patients, visits and recertifications.',
+    highlights: ['Developed MedOps (Next.js, TypeScript, Supabase)'],
   },
   {
     id: 'armet',

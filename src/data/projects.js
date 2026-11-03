@@ -120,14 +120,14 @@ export const featuredProjects = [
     featured: true,
     slug: 'skillfoundri',
     title: 'SkillFoundri',
-    subtitle: 'Learning Platform',
+    subtitle: 'Learning Platform · now LodsTech',
     summary: 'A hybrid Upwork + Asana + Blackboard experience delivering project-based courses with mentorship matching.',
     overview:
-      'SkillFoundri combines project management, coursework, and mentorship into a single learning platform. As COO and co-founder, I guided the product vision and ensured the build supported both cohort-based learning and self-paced journeys.',
+      'SkillFoundri combines project management, coursework, and mentorship into a single learning platform. As co-founder and CTO / Lead Developer, I guided the product vision and ensured the build supported both cohort-based learning and self-paced journeys. SkillFoundri now continues as LodsTech.',
     year: 2025,
     status: 'Live',
     category: 'Web Development',
-    role: 'COO & Product Lead',
+    role: 'CTO & Lead Developer',
     responsibilities: [
       'Product Strategy',
       'Operations & Roadmapping',
@@ -162,9 +162,9 @@ export const featuredProjects = [
     image: projectAssets.skillFoundri.main,
     gallery: projectAssets.skillFoundri.images,
     links: buildLinks({
-      live: 'https://www.skillfoundri.com/',
+      live: 'https://lodstech-io.vercel.app/',
     }),
-    url: 'https://www.skillfoundri.com/',
+    url: 'https://lodstech-io.vercel.app/',
   },
   {
     id: 'rage-fitness',
@@ -625,6 +625,35 @@ export const featuredProjects = [
 ];
 
 export const otherProjects = [
+  {
+    id: 'accc-medops',
+    featured: false,
+    slug: 'accc-medops',
+    title: 'MedOps',
+    subtitle: 'Patient Operations Platform for ACCC',
+    summary: 'An internal operations app built for American Critical Care Consult (ACCC) to coordinate patients, visits and recertifications.',
+    overview:
+      'MedOps is the internal tool I developed while working as a Patient Coordinator at ACCC. It brings patient records, visit scheduling, recertification tracking and facility information into one place for the coordination team.',
+    year: 2026,
+    status: 'Internal',
+    category: 'Web Development',
+    role: 'Developer (while Patient Coordinator)',
+    technologies: ['Next.js', 'React', 'TypeScript', 'Supabase', 'PostgreSQL', 'Tailwind CSS', 'Google Calendar API', 'Leaflet', 'Recharts', 'Zustand'],
+    features: [
+      'Patient records and communications log',
+      'Visit scheduling synced with Google Calendar',
+      'Recertification tracking',
+      'Facilities map',
+      'Visit notes and reminders',
+      'Reporting charts',
+    ],
+    metrics: [],
+    color: '#42BDF5',
+    gradient: 'from-sky-400 to-blue-500',
+    links: buildLinks({
+      live: null,
+    }),
+  },
   {
     id: 'decor-meadow',
     featured: false,

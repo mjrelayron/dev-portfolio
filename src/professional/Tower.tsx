@@ -145,7 +145,7 @@ export function Tower() {
             })}
           </div>
         </div>
-        {currentRole && <p className="mono-label mt-3 text-center text-ink-3">{currentRole.period.split(' ')[0]}</p>}
+        {currentRole && <p className="mono-label mt-3 text-center text-ink-3">{currentRole.period.match(/\d{4}/)?.[0] ?? currentRole.period}</p>}
       </aside>
 
       <div className="tw-tower">
