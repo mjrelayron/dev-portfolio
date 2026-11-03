@@ -14,7 +14,7 @@ import NotFoundPage from './NotFoundPage';
 // Legacy tools touch window/localStorage at render: lazy chunks, client only.
 const tools: Record<string, ComponentType<Record<string, unknown>>> = {
   simulators: lazy(() => import('../lab/ServiceFlow')) as unknown as ComponentType<Record<string, unknown>>,
-  'scraping-dashboard': lazy(() => import('../components/ScrapingDashboard.jsx')),
+  'scraping-dashboard': lazy(() => import('../lab/ScrapeDashboard')),
   chat: lazy(() => import('../components/AIChatPage.jsx')),
   practice: lazy(() => import('../pages/EnglishPracticePage.jsx')),
 };

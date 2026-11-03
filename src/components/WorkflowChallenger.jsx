@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { searchVideos } from '../lib/videoLibrary';
 import { 
   Play, 
   Search, 
@@ -249,29 +250,9 @@ const WorkflowChallenger = () => {
     setLoading(true);
     
     try {
-      // Call backend API for scraped videos - get all videos at once
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://backend-production-cd9f.up.railway.app';
-      
-      // Try different endpoints
-      let url = `${backendUrl}/api/videos/search?tool=${encodeURIComponent(tool)}&query=${encodeURIComponent(query)}&difficulty=${encodeURIComponent(difficulty)}`;
-      
-      console.log(`🌐 Calling backend for scraped videos: ${url}`);
-      
-      let response = await fetch(url);
-      
-      // If the main endpoint fails, try without query parameter
-      if (!response.ok) {
-        console.log('🔄 Main endpoint failed, trying without query parameter...');
-        url = `${backendUrl}/api/videos/search?tool=${encodeURIComponent(tool)}&difficulty=${encodeURIComponent(difficulty)}`;
-        console.log(`🌐 Trying alternative URL: ${url}`);
-        response = await fetch(url);
-      }
-      
-      if (!response.ok) {
-        throw new Error(`Backend API error: ${response.status}`);
-      }
-      
-      const data = await response.json();
+      // Scraped videos come from the static library (public/data/videos.json),
+      // refreshed by the "Scrape videos" GitHub Action — no backend needed.
+      const data = await searchVideos({ tool, query, difficulty });
       
       // Log cache status
       if (data.fromCache) {

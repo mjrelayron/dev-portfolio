@@ -36,13 +36,13 @@ export const stations: Station[] = [
     slug: 'scraping-dashboard',
     path: '/lab/scraping-dashboard',
     name: 'Scraping Dashboard',
-    kicker: 'Station 02 · Live backend',
+    kicker: 'Station 02 · Scheduled scraper',
     description:
-      'The control room for a video-scraping service I run: live job stats, create, start, pause or cancel jobs, toggle schedules and inspect results.',
+      'The control room for the scraper that feeds Workflow Challenger: a nightly GitHub Action pulls automation tutorials from YouTube, scores them and publishes the library. See every run, the library stats and the newest videos.',
     cta: 'Open the dashboard',
     icon: Radar,
-    tags: ['Live API', 'Jobs & schedules', 'Node on Railway'],
-    intro: 'A working control panel wired to the scraping backend. Stats and jobs load live from the API.',
+    tags: ['GitHub Actions', 'YouTube Data API', 'Static JSON'],
+    intro: 'Run history and library stats come straight from the files the scraper publishes. No server to keep alive.',
   },
   {
     slug: 'chat',
