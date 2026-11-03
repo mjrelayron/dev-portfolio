@@ -68,7 +68,11 @@ const assetDirs = [
   'src/assets/Companies',
   'src/assets/SocMed',
   'src/assets/printed materials',
-  'src/assets/SEO'
+  'src/assets/SEO',
+  'src/assets/FitSync',
+  'src/assets/IX Solutions',
+  'src/assets/WhosIn',
+  'src/assets/Automation Challenger'
 ];
 
 console.log('🖼️  Starting WebP conversion...\n');
@@ -83,6 +87,15 @@ for (const dir of assetDirs) {
   } else {
     console.log(`⚠️  Directory not found: ${dir}\n`);
   }
+}
+
+// Top-level images in src/assets (covers, headshot)
+for (const file of fs.readdirSync('src/assets')) {
+  const full = path.join('src/assets', file);
+  if (!fs.statSync(full).isFile() || !/.(png|jpe?g)$/i.test(file)) continue;
+  const out = path.join('src/assets/webp', file.replace(/.[^/.]+$/, '.webp'));
+  await sharp(full).webp({ quality: 85, effort: 6 }).toFile(out);
+  console.log(`✓ Converted: ${file}`);
 }
 
 console.log('🎉 WebP conversion completed!');

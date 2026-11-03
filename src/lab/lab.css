@@ -1,0 +1,169 @@
+/* Experiment Lab stations + Contact Portal pieces. Plain CSS on the design tokens. */
+
+.lab-station {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  background: var(--navy);
+  border: 1px solid var(--line);
+  border-bottom: 4px solid var(--navy-deep);
+  box-shadow: var(--highlight-top);
+  transition: border-color 180ms ease, transform 220ms var(--ease-out);
+}
+.lab-station:hover,
+.lab-station:focus-within { border-color: var(--accent); border-bottom-color: var(--accent-dark); }
+@media (prefers-reduced-motion: no-preference) {
+  .lab-station:hover { transform: translateY(-2px); }
+}
+/* mobile pages sit on navy: lift the cards one step */
+@media (max-width: 1023px) {
+  .lab-station { background: var(--navy-2); border-bottom-color: #121630; }
+}
+
+.lab-station__icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: var(--accent);
+  color: var(--navy);
+  border-bottom: 4px solid var(--accent-dark);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.lab-station--featured {
+  padding: 24px;
+  background:
+    radial-gradient(120% 140% at 100% 0%, rgba(121, 216, 160, 0.16), transparent 55%),
+    var(--navy);
+}
+@media (max-width: 1023px) {
+  .lab-station--featured {
+    background:
+      radial-gradient(120% 140% at 100% 0%, rgba(121, 216, 160, 0.16), transparent 55%),
+      var(--navy-2);
+  }
+}
+.lab-station--featured .lab-station__icon { width: 56px; height: 56px; border-radius: 16px; }
+@media (min-width: 1024px) {
+  .lab-station--featured { padding: 28px 30px; }
+  /* bench pattern: faint isometric grid in the featured station's corner */
+  .lab-station--featured::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 38%;
+    height: 100%;
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+    background-image:
+      linear-gradient(30deg, rgba(121, 216, 160, 0.09) 1px, transparent 1px),
+      linear-gradient(150deg, rgba(121, 216, 160, 0.09) 1px, transparent 1px);
+    background-size: 28px 16px;
+    mask-image: linear-gradient(90deg, transparent, #000 60%);
+    pointer-events: none;
+  }
+}
+
+.lab-station--arcade .lab-station__icon {
+  background: var(--violet);
+  color: #fff;
+  border-bottom-color: var(--violet-dark);
+}
+.lab-station--arcade .mono-label.text-accent-text { color: var(--violet-text); }
+.lab-station--arcade:hover,
+.lab-station--arcade:focus-within { border-color: var(--violet); border-bottom-color: var(--violet-dark); }
+
+/* ───── Contact Portal ───── */
+.portal-hero-glow {
+  position: relative;
+}
+.portal-door {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+  border-radius: var(--radius);
+  background: var(--navy);
+  border: 1px solid var(--line);
+  border-bottom: 4px solid var(--navy-deep);
+  box-shadow: var(--highlight-top);
+}
+@media (max-width: 1023px) {
+  .portal-door { background: var(--navy-2); border-bottom-color: #121630; }
+}
+
+.contact-field {
+  width: 100%;
+  min-height: 46px;
+  padding: 0.7rem 0.9rem;
+  border-radius: 12px;
+  background: var(--navy-deep);
+  border: 1px solid var(--line-strong);
+  color: var(--text);
+  font-size: 1rem;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+.contact-field::placeholder { color: var(--text-3); opacity: 1; }
+.contact-field:hover { border-color: rgba(255, 255, 255, 0.32); }
+.contact-field:focus { outline: none; border-color: var(--violet-light); box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.35); }
+.contact-field[aria-invalid='true'] { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(255, 122, 138, 0.22); }
+
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--line);
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+.contact-link:hover { border-color: rgba(255, 255, 255, 0.4); background: rgba(255, 255, 255, 0.06); }
+.contact-link__icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: var(--navy-3);
+  color: var(--text);
+  border-bottom: 3px solid #121630;
+}
+
+.contact-status {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+}
+.contact-status--success { background: rgba(121, 216, 160, 0.12); border-color: rgba(121, 216, 160, 0.45); }
+.contact-status--error { background: rgba(255, 122, 138, 0.12); border-color: rgba(255, 122, 138, 0.5); }
+
+@keyframes contact-spin { to { transform: rotate(360deg); } }
+.contact-spinner { animation: contact-spin 0.9s linear infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .contact-spinner { animation-duration: 2.4s; }
+}
+
+/* violet primary CTA (Contact Portal): darker violet face keeps white ink at AA */
+.btn-3d.btn-violet {
+  --btn-face: var(--violet-dark);
+  --btn-edge: #2f2896;
+  --btn-ink: #ffffff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), 0 0 0 1px rgba(154, 148, 255, 0.35);
+}
+.btn-3d.btn-violet:hover { filter: brightness(1.12); }
+
+.portal-headline { text-shadow: 0 0 28px rgba(255, 255, 255, 0.28), 0 0 2px rgba(255, 255, 255, 0.4); }

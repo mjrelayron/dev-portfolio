@@ -74,7 +74,7 @@ try {
   `;
 
     // Write to a temp file and run it
-    fs.writeFileSync('temp-extract.js', runnable);
+    fs.writeFileSync('scripts/dev/temp-extract.js', runnable);
 
 } catch (err) {
     console.error("Error preparing script:", err);

@@ -1,0 +1,65 @@
+name: Scrape videos
+
+# Refreshes the Workflow Challenger video library (public/data/videos.json) and
+# the Scraping Dashboard's run history (public/data/scrape-runs.json).
+# Replaces the old Railway backend: the site only ever reads these static files.
+#
+# Needs repo secret YOUTUBE_API_KEY (YouTube Data API v3).
+# Schedules only run from the default branch, so nightly runs start after merge.
+
+on:
+  schedule:
+    - cron: '17 3 * * *' # daily, 03:17 UTC
+  workflow_dispatch:
+    inputs:
+      trigger:
+        description: Who asked for this run
+        default: manual
+        required: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: scrape-videos
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Scrape
+        id: scrape
+        continue-on-error: true
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          TRIGGER: ${{ github.event_name == 'schedule' && 'schedule' || inputs.trigger || 'manual' }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: node scripts/videos/scrape.mjs
+
+      # Commit as the site owner: Vercel Hobby only deploys commits by the
+      # account's own git identity, so a bot author would block the deploy.
+      - name: Commit data
+        run: |
+          git config user.name "bonch"
+          git config user.email "tyrone.brodoxz@gmail.com"
+          git add public/data/videos.json public/data/scrape-runs.json
+          if git diff --cached --quiet; then
+            echo "No data changes."
+          else
+            git commit -m "data: refresh video library (${{ github.event_name }})"
+            git push
+          fi
+
+      - name: Report scrape failure
+        if: steps.scrape.outcome == 'failure'
+        run: |
+          echo "::error::Scrape failed - see the run record in public/data/scrape-runs.json"
+          exit 1

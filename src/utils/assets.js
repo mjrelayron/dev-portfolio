@@ -5,7 +5,7 @@
 import guroImg1 from '/src/assets/webp/guro.ai/536270183_24671247665820897_5850011110701414279_n.webp'
 import guroImg2 from '/src/assets/webp/guro.ai/536279927_24671248132487517_3002615940259727901_n.webp'
 import guroImg3 from '/src/assets/webp/guro.ai/540621977_24671253052487025_4440463990289559173_n.webp'
-import guroVideo from '/src/assets/guro.ai/Guro.AI - AI Lesson Plan Generator for Filipino Teachers.mp4'
+const guroVideo = '/media/guro-ai.mp4'
 
 // SkillFoundri Assets (WebP optimized)
 import skillFoundri1 from '/src/assets/webp/SkillFoundri/1.webp'
@@ -28,27 +28,27 @@ import fantasticBaby2 from '/src/assets/webp/fantasticbabyshakala/2.webp'
 import fantasticBaby3 from '/src/assets/webp/fantasticbabyshakala/3.webp'
 
 // Automation Challenger Assets
-import automationChallenger from '/src/assets/Automation Challenger/Automation Challenger.png'
+import automationChallenger from '/src/assets/webp/Automation Challenger/Automation Challenger.webp'
 
 // FitSync Assets
-import fitSync1 from '/src/assets/FitSync/1.png'
-import fitSync2 from '/src/assets/FitSync/2.png'
-import fitSync3 from '/src/assets/FitSync/3.png'
-import fitSync4 from '/src/assets/FitSync/4.png'
-import fitSync5 from '/src/assets/FitSync/5.png'
+import fitSync1 from '/src/assets/webp/FitSync/1.webp'
+import fitSync2 from '/src/assets/webp/FitSync/2.webp'
+import fitSync3 from '/src/assets/webp/FitSync/3.webp'
+import fitSync4 from '/src/assets/webp/FitSync/4.webp'
+import fitSync5 from '/src/assets/webp/FitSync/5.webp'
 
 // IX Solutions Assets
-import ixSolutions1 from '/src/assets/IX Solutions/1.png'
-import ixSolutions2 from '/src/assets/IX Solutions/2.png'
-import ixSolutions3 from '/src/assets/IX Solutions/3.png'
-import ixSolutions4 from '/src/assets/IX Solutions/4.png'
-import ixSolutions5 from '/src/assets/IX Solutions/5.png'
+import ixSolutions1 from '/src/assets/webp/IX Solutions/1.webp'
+import ixSolutions2 from '/src/assets/webp/IX Solutions/2.webp'
+import ixSolutions3 from '/src/assets/webp/IX Solutions/3.webp'
+import ixSolutions4 from '/src/assets/webp/IX Solutions/4.webp'
+import ixSolutions5 from '/src/assets/webp/IX Solutions/5.webp'
 
 // WhosIn Assets
-import whosIn1 from '/src/assets/WhosIn/1.png'
-import whosIn2 from '/src/assets/WhosIn/2.png'
-import whosIn3 from '/src/assets/WhosIn/3.png'
-import whosInVideo from '/src/assets/WhosIn/Video.mp4'
+import whosIn1 from '/src/assets/webp/WhosIn/1.webp'
+import whosIn2 from '/src/assets/webp/WhosIn/2.webp'
+import whosIn3 from '/src/assets/webp/WhosIn/3.webp'
+const whosInVideo = '/media/whosin.mp4'
 
 // Website Creation Assets (WebP optimized)
 import decorMeadow from '/src/assets/webp/Websites Created and Maintained/decormeadow.webp'
@@ -83,18 +83,40 @@ import seoBefore from '/src/assets/webp/SEO/seo-before.webp'
 import seoAfter from '/src/assets/webp/SEO/seo-after.webp'
 
 // Profile Assets
-import profilePhoto from '/src/assets/Pro-photo.png'
+import profilePhoto from '/src/assets/webp/Pro-photo.webp'
 
 // Placeholder Asset
-import placeholderImage from '/src/assets/placeholder.png'
+import placeholderImage from '/src/assets/webp/placeholder.webp'
 
-import armetTerminal from '/src/assets/armet_terminal.png'
-import autoScoutImg from '/src/assets/Autoscout.jpg'
-import docuMindImg from '/src/assets/Documind.jpg'
-import voiceOpsImg from '/src/assets/VoiceOps.jpg'
-import projectCartelImg from '/src/assets/Project CARTEL.jpg'
-import macroCoachImg from '/src/assets/MacroCoach.jpg'
-import tasktifyImg from '/src/assets/tasktify.jpg'
+import armetTerminal from '/src/assets/webp/armet_terminal.webp'
+import autoScoutImg from '/src/assets/webp/Autoscout.webp'
+import docuMindImg from '/src/assets/webp/Documind.webp'
+import voiceOpsImg from '/src/assets/webp/VoiceOps.webp'
+import projectCartelImg from '/src/assets/webp/Project CARTEL.webp'
+import macroCoachImg from '/src/assets/webp/MacroCoach.webp'
+import tasktifyImg from '/src/assets/webp/tasktify.webp'
+
+// Live-site screenshots (captured from each deployment)
+import liveVirtualStewards from '/src/assets/live/virtual-stewards.webp'
+import liveMixMatchClick from '/src/assets/live/mix-match-click.webp'
+import liveRageHub from '/src/assets/live/rage-hub-v2.webp'
+import liveSuppliesPos from '/src/assets/live/supplies-pos.webp'
+import liveLodstech from '/src/assets/live/lodstech.webp'
+import liveNw2apts from '/src/assets/live/nw2apts.webp'
+import liveVsAcademy from '/src/assets/live/virtual-stewards-academy.webp'
+// MedOps Command Center (demo data)
+import liveMedops from '/src/assets/live/accc-medops.webp'
+
+export const liveAssets = {
+  virtualStewards: liveVirtualStewards,
+  mixMatchClick: liveMixMatchClick,
+  rageHub: liveRageHub,
+  suppliesPos: liveSuppliesPos,
+  lodstech: liveLodstech,
+  nw2apts: liveNw2apts,
+  vsAcademy: liveVsAcademy,
+  medops: liveMedops,
+}
 
 // Export asset objects for easy access
 export const projectAssets = {

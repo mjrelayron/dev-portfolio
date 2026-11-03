@@ -139,133 +139,121 @@ const ServiceSelector = ({ onSelectService, onClose, onShowProcessPage }) => {
     }, 300);
   };
 
+  const availableServices = services.filter((service) => service.available);
+  const onRequestServices = services.filter((service) => !service.available);
+  // ProcessPage has no AI & Automation timeline, so that card links to its simulator only
+  const hasProcess = (id) => id !== 'ai-automation';
+
   return (
-    <div className={`fixed inset-0 bg-black/90 backdrop-blur-md z-[9999] transition-all duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-      <div className="service-selector-modal container mx-auto px-4 py-8 h-full overflow-y-auto">
+    <div className={`lab-stage transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+      <div className="service-selector-modal lab-stage__inner">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+          <div className="max-w-2xl">
+            <p className="mono-label text-cyan-400">Step 1 · Choose a service</p>
+            <h2 className="mt-1 text-2xl md:text-3xl font-bold text-white">
+              Which simulator do you want to run?
+            </h2>
+            <p className="mt-2 text-gray-300">
+              Each simulator is a simplified, hands-on version of how I run that kind of project.
+              Finish one and it hands you a matching quote.
+            </p>
+          </div>
           <button
             onClick={handleClose}
-            className="absolute top-8 right-8 text-white/70 hover:text-white transition-colors text-2xl"
+            className="lab-key inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold"
           >
-            ✕
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+            Close
           </button>
-
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
-            Choose Your <span className="text-gradient">Service</span>
-          </h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Try out our interactive tools to experience what we can do for you.
-            Each simulator gives you a real feel for the service before we work together.
-          </p>
         </div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {services.map((service, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {availableServices.map((service) => (
             <div
               key={service.id}
-              className={`glass-content-pane group transition-all duration-500 relative overflow-hidden ${service.available
-                  ? `hover:scale-105 cursor-pointer ${selectedService?.id === service.id ? 'ring-2 ring-cyan-400 scale-105' : ''}`
-                  : 'opacity-60 cursor-not-allowed'
-                }`}
-              style={{ animationDelay: `${index * 100}ms` }}
+              className={`lab-service group cursor-pointer ${selectedService?.id === service.id ? 'is-selected' : ''}`}
               onClick={() => handleServiceSelect(service)}
             >
-              {/* Service Icon */}
-              <div className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${service.gradient} flex items-center justify-center text-3xl mb-6 mx-auto group-hover:rotate-12 transition-transform duration-300`}>
-                {service.icon}
+              <div className="flex items-start gap-4">
+                <div className="lab-service__icon" style={{ background: `${service.color}2e`, borderColor: `${service.color}66` }} aria-hidden="true">
+                  {service.icon}
+                </div>
+                <div className="min-w-0">
+                  <h3 className="text-xl font-bold text-white">{service.title}</h3>
+                  <p className="text-cyan-400 text-sm font-medium">{service.subtitle}</p>
+                </div>
               </div>
 
-              {/* Service Info */}
-              <div className="text-center mb-6">
-                <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">
-                  {service.title}
-                </h3>
-                <p className="text-cyan-400 font-medium mb-3">
-                  {service.subtitle}
-                </p>
-                <p className="text-gray-300 leading-relaxed">
-                  {service.description}
-                </p>
-              </div>
+              <p className="mt-3 text-gray-300 text-[0.95rem] leading-relaxed">{service.description}</p>
 
-              {/* Features */}
-              <div className="space-y-2 mb-6">
+              <ul className="mt-3 flex flex-wrap gap-2" aria-label={`${service.title} covers`}>
                 {service.features.map((feature, idx) => (
-                  <div key={idx} className="flex items-center text-sm text-gray-300">
-                    <div className="w-2 h-2 bg-cyan-400 rounded-full mr-3"></div>
-                    {feature}
-                  </div>
+                  <li key={idx} className="chip">{feature}</li>
                 ))}
-              </div>
+              </ul>
 
-              {/* Action Buttons */}
-              <div className="text-center space-y-3 relative z-10">
-                {service.available ? (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleServiceSelect(service);
-                    }}
-                    className={`w-full inline-flex items-center justify-center px-6 py-3 rounded-xl bg-gradient-to-r ${service.gradient} text-white font-bold hover:shadow-lg transition-all duration-300 group-hover:scale-105`}
-                  >
-                    <span>Try {service.simulator}</span>
-                    <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                    </svg>
-                  </button>
-                ) : (
-                  <div className="inline-flex items-center px-6 py-3 rounded-xl bg-gray-600/50 text-gray-300 font-bold border border-gray-500/50 w-full justify-center">
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span>{service.status}</span>
-                  </div>
-                )}
-
-                {/* Complete Process Link - Always visible */}
+              <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-3 relative z-10">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    onShowProcessPage(service.id);
+                    handleServiceSelect(service);
                   }}
-                  className="inline-flex items-center text-cyan-400 hover:text-cyan-300 transition-colors text-sm font-medium no-focus-outline"
+                  className="bg-gradient-to-r inline-flex items-center gap-2 px-5 py-2.5 text-[0.95rem]"
                 >
-                  <span>View Complete Process Details</span>
-                  <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
+                  <span>Try {service.simulator}</span>
+                  <svg className="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
                 </button>
+                {hasProcess(service.id) && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onShowProcessPage(service.id);
+                    }}
+                    className="text-cyan-400 text-sm font-semibold underline-offset-4 hover:underline"
+                  >
+                    View complete process
+                  </button>
+                )}
               </div>
-
-              {/* Hover Effect */}
-              <div className={`absolute inset-0 bg-gradient-to-r ${service.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none`}></div>
             </div>
           ))}
         </div>
 
-        {/* Footer */}
-        <div className="text-center mt-12">
-          <div className="bg-blue-500/10 border border-blue-400/30 rounded-lg p-6 max-w-3xl mx-auto mb-6">
-            <div className="flex items-center justify-center mb-3">
-              <svg className="w-6 h-6 text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <h4 className="text-blue-400 font-semibold">Simplified Demo Process</h4>
+        {/* Services without a simulator: process details only */}
+        {onRequestServices.length > 0 && (
+          <div className="mt-8">
+            <h3 className="mono-label text-gray-400">No simulator for these — scoped on a call</h3>
+            <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
+              {onRequestServices.map((service) => (
+                <div key={service.id} className="lab-service lab-service--compact">
+                  <div className="flex items-center gap-3">
+                    <span className="lab-service__icon lab-service__icon--sm" style={{ background: `${service.color}2e`, borderColor: `${service.color}66` }} aria-hidden="true">
+                      {service.icon}
+                    </span>
+                    <div className="min-w-0">
+                      <h4 className="font-bold text-white leading-tight">{service.title}</h4>
+                      <p className="text-sm text-gray-400">{service.subtitle}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => onShowProcessPage(service.id)}
+                    className="mt-3 text-cyan-400 text-sm font-semibold underline-offset-4 hover:underline"
+                  >
+                    See how I'd run it
+                  </button>
+                </div>
+              ))}
             </div>
-            <p className="text-gray-300 text-sm">
-              These simulators provide a simplified version of our actual processes to give you a taste of what we do.
-              Each service has detailed process information available via the links above.
-            </p>
           </div>
+        )}
 
-          <p className="text-gray-400 text-sm">
-            Each simulator is designed to give you real value and insight into our services.
-            <br />
-            After trying them out, you'll have a clear understanding of what we can achieve together.
-          </p>
-        </div>
+        {/* Footer */}
+        <p className="mt-8 max-w-3xl text-sm text-gray-400">
+          These simulators are simplified versions of the real process — enough to give you real insight
+          and a ballpark number before we work together.
+        </p>
       </div>
     </div>
   );

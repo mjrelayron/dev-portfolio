@@ -700,8 +700,8 @@ const FullStackQuoteGenerator = ({ onBack, onGenerateQuote, simulatorData }) => 
   };
 
   return (
-    <div className="fixed inset-0 bg-black/95 backdrop-blur-md z-[9999] flex items-center justify-center p-4">
-      <div className="bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-md rounded-2xl border border-cyan-400/30 shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+    <div className="lab-stage">
+      <div className="lab-quote">
         {/* Header */}
         <div className="sticky top-0 z-10 bg-gradient-to-r from-gray-800/90 to-gray-900/90 backdrop-blur-md border-b border-cyan-400/30 p-6 rounded-t-2xl">
           <div className="flex items-center justify-between">
@@ -713,6 +713,7 @@ const FullStackQuoteGenerator = ({ onBack, onGenerateQuote, simulatorData }) => 
             </div>
             <button
               onClick={onBack}
+              aria-label="Close quote generator"
               className="w-10 h-10 bg-gray-700/50 hover:bg-gray-600/50 rounded-full flex items-center justify-center transition-all duration-300 text-gray-300 hover:text-white"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -1,30 +1,41 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    react(),
-  ],
+  plugins: [react()],
+  resolve: {
+    // single dark theme: legacy tools' next-themes imports resolve to a shim
+    alias: { 'next-themes': fileURLToPath(new URL('./src/app/themeShim.tsx', import.meta.url)) },
+  },
+  define: {
+    // DEV-BOT switches from the SVG fallback to Rive when this file exists
+    __HAS_RIVE__: JSON.stringify(fs.existsSync('public/rive/devbot.riv')),
+  },
   css: {
     postcss: './postcss.config.js',
   },
-  assetsInclude: ['**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.gif', '**/*.svg', '**/*.mp4', '**/*.webm', '**/*.mov'],
   build: {
     outDir: 'dist',
     rollupOptions: {
       output: {
-        assetFileNames: 'assets/[name].[hash].[ext]'
-      }
-    }
+        assetFileNames: 'assets/[name].[hash].[ext]',
+      },
+    },
+  },
+  ssr: {
+    // bundle these into the SSR entry so their ESM/CSS quirks don't matter in Node
+    noExternal: ['framer-motion', 'lucide-react', 'gsap'],
   },
   server: {
     proxy: {
       '/api': {
-        target: 'https://mjre-portfolio.vercel.app',
+        target: 'https://mjre-deverse.vercel.app',
         changeOrigin: true,
         secure: true,
-      }
-    }
-  }
-})
+      },
+    },
+  },
+});

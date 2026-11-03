@@ -31,16 +31,24 @@ PROJECTS:
 3. Guro.AI: An AI lesson plan generator for teachers (Next.js/OpenAI).
 4. SEO Simulator: An interactive tool to demonstrate SEO optimization techniques (React).
 5. AI Simulator: A wizard to design custom AI architectures (React/Flow).
-6. SkillFoundri: A project-based learning platform with mentorship (React/Node/MongoDB) - NOT WordPress.
+6. SkillFoundri (now LodsTech, https://lodstech-io.vercel.app/): A project-based learning platform with mentorship - NOT WordPress. MJR is co-founder and CTO / Lead Developer.
 7. Decor: High-end Home Decor E-commerce Store (WordPress/WooCommerce).
 8. Femme: Trendy Women's Fashion Boutique (WordPress/WooCommerce).
 9. Gents: Premium Men's Apparel Shop (WordPress/WooCommerce).
 10. Plush: Luxury Lifestyle & Accessories Brand (WordPress).
+12. Mix & Match & Click (https://mix-match-click.vercel.app/): VA community, agency and productivity platform (Next.js/Supabase).
+13. Lapis & Papel Supplies POS (https://supplies-pos.vercel.app/shop): POS, invoicing, inventory and online school-kit shop (Next.js/Prisma).
+14. VirtualStewards Academy (https://virtual-stewards-academy.vercel.app/): VA training platform with courses, AI simulations and career tracks (Next.js/Supabase).
+15. Virtual Stewards (https://virtual-stewards.vercel.app/): specialized VA staffing site for BrandSolutions (Next.js).
+16. LODStech.io (https://lodstech-io.vercel.app/): studio site with a live, in-page project showroom (Next.js/React Three Fiber).
+17. Northwood II Apartments (https://nw2apts.vercel.app/): website for a 104-unit apartment community in Shreveport, LA.
+18. Rage Fitness Gym management app: https://rage-fitness-gym.vercel.app/v2/
+11. MedOps (https://accc-medops.vercel.app/): Internal patient operations app built for ACCC (American Critical Care Consult) while working there as Patient Coordinator, Jan–Aug 2026 (Next.js/TypeScript/Supabase).
 
 CONTACT:
-- Email: contact@developer.com
-- GitHub: github.com/developer
-- LinkedIn: linkedin.com/in/developer
+- Email: mjr.elayron@gmail.com
+- GitHub: github.com/bonch223
+- LinkedIn: linkedin.com/in/melvin-jr-elayron
 
 SCHEDULING:
 - If a user expresses interest in working together, hiring the developer, or discussing a project, ask if they would like to schedule a call.

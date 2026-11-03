@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const ProcessPage = ({ service, onBack }) => {
+  const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -629,14 +631,14 @@ const ProcessPage = ({ service, onBack }) => {
   const processData = getProcessData();
 
   return (
-    <div className={`fixed inset-0 bg-black/95 backdrop-blur-md z-[9999] transition-all duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-      <div className="container mx-auto px-4 py-8 h-full overflow-y-auto">
+    <div className={`lab-stage transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+      <div className="lab-stage__inner">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="mb-8">
             <button
               onClick={handleBack}
-              className="flex items-center text-white/70 hover:text-white transition-colors mb-4 no-focus-outline"
+              className="lab-key inline-flex items-center px-3 py-2 text-sm font-semibold mb-4"
             >
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -734,7 +736,9 @@ const ProcessPage = ({ service, onBack }) => {
                 </button>
                 <button
                   onClick={() => {
-                    document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+                    const contact = document.getElementById('contact');
+                    if (contact) contact.scrollIntoView({ behavior: 'smooth' });
+                    else navigate('/contact');
                     handleBack();
                   }}
                   className="bg-gray-700/80 hover:bg-gray-600/80 text-white font-bold py-3 px-8 rounded-lg border border-gray-500 hover:border-gray-400 transition-all duration-300"

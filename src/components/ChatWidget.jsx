@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import emailjs from '@emailjs/browser';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { DevBot } from '../mascot/DevBot';
+import { useSettings } from '../store/useSettings';
+import '../lab/chat-widget.css';
+import { EmailStatus, parseEmailToken } from './chat/EmailHandoff';
 import { aiContext } from '../data/ai-context';
 
 // Scheduler Component
@@ -27,7 +30,7 @@ const Scheduler = ({ onConfirm, onCancel }) => {
         </div>
         <div className="flex gap-2 pt-2">
           <button type="button" onClick={onCancel} className="flex-1 px-3 py-2 bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-300 rounded-lg text-xs font-semibold hover:bg-gray-200 dark:hover:bg-white/10 transition-colors">Cancel</button>
-          <button type="submit" className="flex-1 px-3 py-2 bg-cyan-500 text-white rounded-lg text-xs font-semibold hover:bg-cyan-600 transition-colors shadow-sm">Confirm</button>
+          <button type="submit" className="flex-1 px-3 py-2 bg-violet-dark text-white rounded-lg text-xs font-semibold hover:brightness-110 transition-colors shadow-[inset_0_-3px_0_#2f2896]">Confirm</button>
         </div>
       </form>
     </div>
@@ -40,7 +43,7 @@ const QuoteCard = ({ data }) => {
     <div className="bg-white dark:bg-white/5 p-4 rounded-xl border border-gray-200 dark:border-white/10 shadow-lg my-3 max-w-sm mx-auto transform transition-all hover:scale-[1.02]">
       <div className="flex justify-between items-start mb-3 border-b border-gray-100 dark:border-white/5 pb-2">
         <div>
-          <h3 className="text-lg font-bold text-gray-900 dark:text-white bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-blue-500">
+          <h3 className="text-lg font-bold text-white">
             {data.package_title}
           </h3>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{data.package_summary}</p>
@@ -97,28 +100,6 @@ const QuoteCard = ({ data }) => {
   );
 };
 
-// EmailStatus Component
-const EmailStatus = ({ data, sendEmail }) => {
-  const [status, setStatus] = useState('sending');
-  const hasSent = useRef(false);
-
-  useEffect(() => {
-    let mounted = true;
-    const send = async () => {
-      if (hasSent.current) return;
-      hasSent.current = true;
-      const success = await sendEmail(data);
-      if (mounted) setStatus(success ? 'success' : 'error');
-    };
-    send();
-    return () => { mounted = false; };
-  }, [data, sendEmail]);
-
-  if (status === 'sending') return <div className="p-3 bg-cyan-50 dark:bg-cyan-900/20 rounded-lg border border-cyan-100 dark:border-cyan-800 flex items-center gap-2 my-2"><div className="w-4 h-4 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin"></div><span className="text-sm text-cyan-700 dark:text-cyan-300">Sending details to Melvin...</span></div>;
-  if (status === 'success') return <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-100 dark:border-green-800 flex items-center gap-2 my-2"><svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg><span className="text-sm text-green-700 dark:text-green-300">Sent! Melvin will be in touch.</span></div>;
-  return <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-100 dark:border-red-800 flex items-center gap-2 my-2"><svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg><span className="text-sm text-red-700 dark:text-red-300">Failed to send. Please try again.</span></div>;
-};
-
 // Typing Effect Component
 const TypingMessage = ({ content, onComplete, renderContent }) => {
   const [displayedContent, setDisplayedContent] = useState('');
@@ -132,14 +113,13 @@ const TypingMessage = ({ content, onComplete, renderContent }) => {
   return renderContent(displayedContent);
 };
 
+const GREETING = "Hi! I'm MelBot, Melvin's assistant. Ask me about his projects, skills, experience or services. If I don't know something, I'll pass your question to Melvin.";
+
 const ChatWidget = () => {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const introSeen = useSettings((s) => s.introSeen);
   const [isOpen, setIsOpen] = useState(false);
-  const EMAILJS_SERVICE_ID = 'service_2wtte0j';
-  const EMAILJS_TEMPLATE_ID = 'template_5arjl6k';
-  const EMAILJS_PUBLIC_KEY = 'tBuSbZ57Q0Hn6k-dJ';
-
-  useEffect(() => { emailjs.init(EMAILJS_PUBLIC_KEY); }, []);
 
   const [messages, setMessages] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -150,23 +130,8 @@ const ChatWidget = () => {
         if (now - parseInt(savedTime) < 48 * 60 * 60 * 1000) return JSON.parse(saved);
       }
     }
-    return [{ role: 'assistant', content: "Hi! I'm MelBot. Ask me anything about the developer's skills or projects.", animate: false }];
+    return [{ role: 'assistant', content: GREETING, animate: false }];
   });
-
-  const sendEmail = async (data) => {
-    try {
-      const transcriptText = messages.map(m => `[${m.role.toUpperCase()}]: ${m.content}`).join('\n\n');
-      const templateParams = {
-        to_name: 'Melvin',
-        from_name: data.name || 'User',
-        from_email: data.email || 'No Email Provided',
-        message: `Type: ${data.type || 'Inquiry'}\n${data.date ? `Requested Date: ${data.date}` : ''}\n${data.time ? `Requested Time: ${data.time}` : ''}\n\nPain Points: ${data.painPoints || 'N/A'}\nGoals: ${data.goals || 'N/A'}\nSummary: ${data.summary || 'N/A'}\n\n--- FULL TRANSCRIPT ---\n${transcriptText}`,
-        reply_to: data.email || '',
-      };
-      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams, EMAILJS_PUBLIC_KEY);
-      return true;
-    } catch (error) { console.error('EmailJS Error:', error); return false; }
-  };
 
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -175,7 +140,7 @@ const ChatWidget = () => {
   const messagesEndRef = useRef(null);
   const recognitionRef = useRef(null);
 
-  const starterQuestions = ["What is Melvin's skills?", "Show me Melvin's projects", "How to Contact Melvin"];
+  const starterQuestions = ["Show me Melvin's projects", "What are Melvin's skills?", "I have a question for Melvin"];
   const scrollToBottom = () => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); };
 
   useEffect(() => {
@@ -228,7 +193,7 @@ const ChatWidget = () => {
   }, [messages, isMuted]);
 
   const clearHistory = () => {
-    const defaultMsg = [{ role: 'assistant', content: "Hi! I'm MelBot. Ask me anything about the developer's skills or projects.", animate: true }];
+    const defaultMsg = [{ role: 'assistant', content: GREETING, animate: true }];
     setMessages(defaultMsg);
     if (typeof window !== 'undefined') {
       const messagesToSave = defaultMsg.map(({ animate, ...msg }) => msg);
@@ -275,7 +240,7 @@ const ChatWidget = () => {
 
     try {
       const contextHistory = messages.slice(-30).map(m => ({ role: m.role, text: m.content }));
-      const apiUrl = 'https://mjre-portfolio.vercel.app/api/chat';
+      const apiUrl = '/api/chat'; // same-origin: works on every deployment (production + previews)
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -355,15 +320,8 @@ const ChatWidget = () => {
     const renderedContent = [];
     let projectBuffer = [];
     lines.forEach((line, index) => {
-      if (line.includes(':::SEND_EMAIL|')) {
-        const match = line.match(/:::SEND_EMAIL\|(.+?):::/);
-        if (match) {
-          try {
-            const emailData = JSON.parse(match[1]);
-            renderedContent.push(<EmailStatus key={`email-${index}`} data={emailData} sendEmail={sendEmail} />);
-          } catch (e) { console.error("Failed to parse email token", e); }
-        }
-      }
+      const email = line.includes(':::SEND_EMAIL|') ? parseEmailToken(line) : null;
+      if (email) renderedContent.push(<EmailStatus key={`email-${index}`} data={email.data} messages={messages} />);
       if (line.trim().startsWith('>>>')) {
         const match = line.match(/>>> :::([^|]+)\|(.+?)::: - (.+)/);
         if (match) projectBuffer.push({ title: match[1], link: match[2], desc: match[3] });
@@ -396,58 +354,82 @@ const ChatWidget = () => {
     return renderedContent;
   };
 
+  // never on top of the intro animation (the Shell already hides the widget inside /os)
+  if (!introSeen && pathname === '/') return null;
+  // the full-page MelBot is already on screen there
+  if (pathname === '/lab/chat') return null;
+
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end font-sans">
+    <div className={`chat-widget font-body ${isOpen ? 'is-open' : ''}`}>
       {isOpen && (
-        <div className="fixed inset-0 z-[60] w-full h-full lg:static lg:z-auto lg:w-[360px] lg:h-[550px] lg:mb-4 flex flex-col overflow-hidden animate-fade-in-up lg:rounded-2xl border-0 lg:border border-gray-200 dark:border-white/20 shadow-2xl backdrop-blur-xl bg-white/95 dark:bg-black/90 lg:bg-white/90 lg:dark:bg-black/40 supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-black/40">
-          <div className="p-4 flex justify-between items-center border-b border-gray-200 dark:border-white/10 bg-white/50 dark:bg-white/5 backdrop-blur-md">
-            <div className="flex items-center">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-600 p-[2px] shadow-lg"><div className="w-full h-full rounded-full bg-white dark:bg-black/50 flex items-center justify-center backdrop-blur-sm"><span className="text-xl">🤖</span></div></div>
-              <div className="ml-3"><h3 className="font-bold text-gray-900 dark:text-white text-lg tracking-wide">MelBot</h3><div className="flex items-center text-[10px] text-cyan-600 dark:text-cyan-300 uppercase tracking-wider font-semibold"><span className="w-1.5 h-1.5 bg-green-500 dark:bg-green-400 rounded-full mr-1.5 animate-pulse shadow-[0_0_8px_rgba(74,222,128,0.5)]"></span>Online</div></div>
+        <div id="melbot-panel" role="dialog" aria-label="Chat with MelBot" className="chat-widget__panel">
+          <div className="chat-widget__head">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <DevBot size="xs" state={isLoading ? 'think' : 'idle'} />
+              <div className="min-w-0">
+                <h3 className="font-display font-bold text-ink text-[1.05rem] leading-tight">MelBot</h3>
+                <p className="flex items-center font-mono text-[0.62rem] uppercase tracking-[0.14em] text-mint"><span className="w-1.5 h-1.5 bg-mint rounded-full mr-1.5" aria-hidden="true"></span>Online · ask me</p>
+              </div>
             </div>
-            <div className="flex items-center space-x-1">
-              <button onClick={() => { setIsMuted(!isMuted); window.speechSynthesis.cancel(); }} className={`p-2 rounded-full transition-all duration-200 ${!isMuted ? 'text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-900/20' : 'text-gray-400 dark:text-white/40 hover:bg-gray-100 dark:hover:bg-white/10'}`} title={isMuted ? "Unmute Voice" : "Mute Voice"}>
+            <div className="flex items-center">
+              <button onClick={() => { setIsMuted(!isMuted); window.speechSynthesis.cancel(); }} className="chat-widget__icon-btn" aria-pressed={!isMuted} aria-label={isMuted ? "Unmute voice replies" : "Mute voice replies"} title={isMuted ? "Unmute Voice" : "Mute Voice"}>
                 {isMuted ? (
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" strokeDasharray="1 1" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" /></svg>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" strokeDasharray="1 1" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" /></svg>
                 ) : (
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" /></svg>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" /></svg>
                 )}
               </button>
-              <button onClick={clearHistory} className="p-2 text-gray-500 dark:text-white/60 hover:text-red-500 dark:hover:text-red-400 hover:bg-gray-100 dark:hover:bg-white/10 rounded-full transition-all duration-200" title="Clear Conversation"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button>
-              <button onClick={() => { setIsOpen(false); navigate('/chat'); }} className="p-2 text-gray-500 dark:text-white/60 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 rounded-full transition-all duration-200" title="Open Full Page"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg></button>
-              <button onClick={() => setIsOpen(false)} className="p-2 text-gray-500 dark:text-white/60 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 rounded-full transition-all duration-200"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg></button>
+              <button onClick={clearHistory} className="chat-widget__icon-btn hover:!text-[var(--danger)]" aria-label="Clear conversation" title="Clear Conversation"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button>
+              <button onClick={() => { setIsOpen(false); navigate('/lab/chat'); }} className="chat-widget__icon-btn" aria-label="Open full-page chat" title="Open Full Page"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg></button>
+              <button onClick={() => setIsOpen(false)} className="chat-widget__icon-btn" aria-label="Close chat" title="Close"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg></button>
             </div>
           </div>
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-white/10 scrollbar-track-transparent">
+          <div className="chat-widget__log space-y-3" role="log" aria-live="polite" aria-label="Conversation">
             {messages.map((msg, idx) => (
               <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[85%] p-3.5 rounded-2xl text-sm leading-relaxed shadow-md backdrop-blur-sm ${msg.role === 'user' ? 'bg-cyan-600 text-white rounded-br-sm shadow-cyan-500/20' : 'bg-gray-100 dark:bg-white/10 text-gray-800 dark:text-gray-100 border border-gray-200 dark:border-white/10 rounded-bl-sm shadow-gray-200/50 dark:shadow-none'}`}>
+                <div className={`chat-widget__bubble ${msg.role === 'user' ? 'chat-widget__bubble--me' : 'chat-widget__bubble--bot'}`}>
+                  <span className="sr-only">{msg.role === 'user' ? 'You:' : 'MelBot:'}</span>
                   {msg.role === 'assistant' && msg.animate ? <TypingMessage content={msg.content} onComplete={() => handleAnimationComplete(idx)} renderContent={renderMessageContent} /> : renderMessageContent(msg.content)}
                 </div>
               </div>
             ))}
-            {isLoading && (<div className="flex justify-start"><div className="bg-gray-100 dark:bg-white/5 p-3 rounded-2xl rounded-bl-sm border border-gray-200 dark:border-white/10 flex space-x-1.5 backdrop-blur-sm shadow-sm"><div className="w-1.5 h-1.5 bg-cyan-500 dark:bg-cyan-400 rounded-full animate-bounce"></div><div className="w-1.5 h-1.5 bg-cyan-500 dark:bg-cyan-400 rounded-full animate-bounce delay-100"></div><div className="w-1.5 h-1.5 bg-cyan-500 dark:bg-cyan-400 rounded-full animate-bounce delay-200"></div></div></div>)}
+            {isLoading && (<div className="flex justify-start" aria-label="MelBot is typing"><div className="chat-widget__bubble chat-widget__bubble--bot flex space-x-1.5"><div className="w-1.5 h-1.5 bg-violet-light rounded-full animate-bounce"></div><div className="w-1.5 h-1.5 bg-violet-light rounded-full animate-bounce delay-100"></div><div className="w-1.5 h-1.5 bg-violet-light rounded-full animate-bounce delay-200"></div></div></div>)}
             <div ref={messagesEndRef} />
           </div>
-          <div className="p-4 bg-gray-50/80 dark:bg-black/20 backdrop-blur-md border-t border-gray-200 dark:border-white/10">
-            {messages.length < 3 && (<div className="flex gap-2 mb-3 overflow-x-auto pb-1 scrollbar-hide">{starterQuestions.map((q, i) => (<button key={i} onClick={() => handleSubmit(null, q)} className="whitespace-nowrap px-3 py-1.5 bg-white dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 rounded-full text-xs text-cyan-700 dark:text-cyan-100 border border-gray-200 dark:border-white/10 transition-all duration-200 hover:scale-105 hover:border-cyan-500/30 shadow-sm">{q}</button>))}</div>)}
+          <div className="chat-widget__foot">
+            {messages.length < 3 && (<div className="flex gap-2 mb-2.5 overflow-x-auto pb-1 scrollbar-none">{starterQuestions.map((q, i) => (<button key={i} onClick={() => handleSubmit(null, q)} className="chat-widget__chip">{q}</button>))}</div>)}
             <form onSubmit={handleSubmit}>
               <div className="relative flex items-center">
-                <input type="text" value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask MelBot..." className="w-full bg-white dark:bg-black/30 border border-gray-300 dark:border-white/10 rounded-full pl-4 pr-20 py-3 text-gray-900 dark:text-white text-sm placeholder-gray-500 dark:placeholder-white/30 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all shadow-inner" />
-                <div className="absolute right-1.5 flex items-center space-x-1">
-                  <button type="button" onClick={handleVoiceInput} className={`p-2 rounded-full transition-all duration-200 ${isListening ? 'bg-red-500 text-white animate-pulse shadow-[0_0_10px_rgba(239,68,68,0.5)]' : 'text-gray-400 dark:text-white/40 hover:text-gray-600 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10'}`} title={isListening ? "Listening..." : "Use Voice"}><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg></button>
-                  <button type="submit" disabled={!input.trim() || isLoading} className="p-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-full hover:shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all duration-200"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg></button>
+                <label htmlFor="melbot-widget-input" className="sr-only">Message MelBot</label>
+                <input id="melbot-widget-input" type="text" value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask MelBot..." className="chat-widget__field" />
+                <div className="absolute right-1.5 flex items-center gap-1">
+                  <button type="button" onClick={handleVoiceInput} className={`chat-widget__icon-btn ${isListening ? '!bg-[var(--danger)] !text-navy' : ''}`} aria-pressed={isListening} aria-label={isListening ? "Stop voice input" : "Use voice input"} title={isListening ? "Listening..." : "Use Voice"}><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg></button>
+                  <button type="submit" disabled={!input.trim() || isLoading} className="chat-widget__send" aria-label="Send message"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14m-6-6l6 6-6 6" /></svg></button>
                 </div>
               </div>
             </form>
           </div>
         </div>
       )}
-      <button onClick={() => setIsOpen(!isOpen)} className={`group relative flex items-center justify-center w-16 h-16 rounded-full shadow-2xl transition-all duration-500 z-50 ${isOpen ? 'bg-gray-800 text-white rotate-90' : 'bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 text-white hover:scale-110 hover:shadow-[0_0_30px_rgba(6,182,212,0.5)]'}`}>
-        {!isOpen && (<span className="absolute inset-0 rounded-full bg-cyan-400 opacity-20 animate-ping"></span>)}
-        {isOpen ? (<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>) : (<div className="relative"><span className="text-3xl filter drop-shadow-md">🤖</span><span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 border-2 border-white rounded-full"></span></div>)}
-        {!isOpen && (<span className="absolute right-20 bg-white/90 backdrop-blur-sm text-gray-900 px-4 py-2 rounded-xl text-sm font-bold opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap shadow-xl pointer-events-none translate-x-4 group-hover:translate-x-0">Chat with MelBot<span className="absolute top-1/2 -right-1.5 w-3 h-3 bg-white/90 transform -translate-y-1/2 rotate-45"></span></span>)}
-      </button>
+      <div className="chat-widget__row">
+        {!isOpen && <span className="chat-widget__label" aria-hidden="true">Ask me</span>}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="chat-widget__launcher"
+          aria-expanded={isOpen}
+          aria-controls="melbot-panel"
+          aria-label={isOpen ? 'Close chat with MelBot' : 'Ask me: chat with MelBot'}
+        >
+          {isOpen ? (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+          ) : (
+            <>
+              <span className="devbot-wrap"><DevBot size="sm" state="idle" /></span>
+              <span className="chat-widget__dot" aria-hidden="true"></span>
+            </>
+          )}
+        </button>
+      </div>
     </div>
   );
 };

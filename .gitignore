@@ -27,3 +27,8 @@ dist-ssr
 .vercel
 
 .vercel
+dist-ssr
+test-results
+playwright-report
+docs/screenshots/tmp
+.tmp

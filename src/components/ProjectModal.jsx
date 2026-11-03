@@ -1,204 +1,208 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { X, ExternalLink, ArrowRight, BarChart3, Code2, Target, Lightbulb } from 'lucide-react';
+import { useReducedMotion } from '../hooks/useReducedMotion';
+import { CoverPlaceholder } from '../showroom/covers';
+import '../showroom/showroom.css';
 
+/**
+ * "Quick look" dialog. Accepts either a raw entry from data/projects.js or a
+ * normalised Project from data/portfolio.ts.
+ */
 const ProjectModal = ({ project, onClose }) => {
     const navigate = useNavigate();
+    const reduced = useReducedMotion();
+    const closeRef = useRef(null);
 
-    // Lock body scroll when modal is open
+    // Lock body scroll when modal is open; Esc closes; focus goes in and comes back
     useEffect(() => {
-        if (project) {
-            document.body.style.overflow = 'hidden';
-        }
-        return () => {
-            document.body.style.overflow = 'unset';
+        if (!project) return;
+        const prev = document.activeElement;
+        document.body.style.overflow = 'hidden';
+        closeRef.current?.focus();
+        const onKey = (e) => {
+            if (e.key === 'Escape') {
+                e.stopPropagation();
+                onClose();
+            }
         };
-    }, [project]);
+        window.addEventListener('keydown', onKey, true);
+        return () => {
+            window.removeEventListener('keydown', onKey, true);
+            document.body.style.overflow = 'unset';
+            prev?.focus?.();
+        };
+    }, [project, onClose]);
 
-    if (!project) return null;
+    if (!project || typeof document === 'undefined') return null;
+
+    const image = project.cover ?? project.image;
+    const tech = project.tech ?? project.technologies ?? [];
+    const rawLive = project.liveUrl ?? project.links?.live;
+    const live = rawLive && !/github\.com\/username\//.test(rawLive) ? rawLive : null;
+    const internalLive = live?.startsWith('/');
 
     const handleViewFullCaseStudy = () => {
+        onClose();
         navigate(`/projects/${project.slug}`);
     };
 
+    const enter = reduced ? { initial: false } : { initial: { opacity: 0, y: 16, scale: 0.98 }, animate: { opacity: 1, y: 0, scale: 1 } };
+
     return createPortal(
-        <AnimatePresence>
-            <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6">
-                {/* Backdrop */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    onClick={onClose}
-                    className="absolute inset-0 bg-slate-900/80 backdrop-blur-sm"
-                />
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-6" data-accent="violet">
+            {/* Backdrop */}
+            <motion.div
+                initial={reduced ? false : { opacity: 0 }}
+                animate={{ opacity: 1 }}
+                onClick={onClose}
+                className="absolute inset-0 bg-[rgba(9,11,28,0.82)]"
+                aria-hidden
+            />
 
-                {/* Modal Container */}
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                    className="relative w-full max-w-4xl max-h-[90vh] bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden flex flex-col"
-                >
-                    {/* Close Button */}
-                    <button
-                        onClick={onClose}
-                        className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/20 hover:bg-black/40 text-white transition-colors backdrop-blur-md"
-                    >
-                        <X size={20} />
-                    </button>
+            {/* Modal Container */}
+            <motion.div
+                {...enter}
+                transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="quicklook-title"
+                className="qk"
+            >
+                {/* Close Button */}
+                <button ref={closeRef} type="button" onClick={onClose} className="lb__btn absolute right-3 top-3 z-10" aria-label="Close quick look">
+                    <X size={20} aria-hidden />
+                </button>
 
-                    {/* Header Image/Video */}
-                    <div className="relative h-48 sm:h-64 md:h-80 flex-shrink-0 bg-slate-100 dark:bg-slate-800">
-                        <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-20`} />
-                        {project.video ? (
-                            <video
-                                src={project.video}
-                                className="w-full h-full object-cover"
-                                autoPlay
-                                muted
-                                loop
-                                playsInline
-                            />
-                        ) : (
-                            <img
-                                src={project.image}
-                                alt={project.title}
-                                className="w-full h-full object-cover"
-                            />
-                        )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-80" />
+                {/* Header Image/Video */}
+                <div className="qk__media">
+                    {project.video && !reduced ? (
+                        <video
+                            src={project.video}
+                            poster={image}
+                            className="h-full w-full object-cover"
+                            autoPlay
+                            muted
+                            loop
+                            playsInline
+                        />
+                    ) : image ? (
+                        <img src={image} alt="" className="h-full w-full object-cover object-top" width={1280} height={800} decoding="async" />
+                    ) : (
+                        <CoverPlaceholder project={project} alt="" />
+                    )}
+                    <div className="qk__shade" aria-hidden />
 
-                        {/* Title Overlay */}
-                        <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
-                            <div className="flex items-center gap-3 mb-2">
-                                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-white/20 text-white backdrop-blur-md border border-white/10">
-                                    {project.category}
-                                </span>
-                                <span className={`px-2 py-1 rounded-full text-xs font-medium backdrop-blur-md ${project.status === 'Live'
-                                    ? 'bg-green-500/20 text-green-300 border border-green-500/30'
-                                    : 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30'
-                                    }`}>
+                    {/* Title Overlay */}
+                    <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-7">
+                        <div className="mb-2 flex flex-wrap items-center gap-2">
+                            <span className="chip qk__chip">{project.category}</span>
+                            {project.status && (
+                                <span className={`chip qk__chip ${project.status === 'Live' ? 'qk__chip--live' : 'qk__chip--warn'}`}>
                                     {project.status}
                                 </span>
-                            </div>
-                            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-2">{project.title}</h2>
-                            <p className="text-lg text-slate-200 font-medium">{project.subtitle}</p>
-                        </div>
-                    </div>
-
-                    {/* Scrollable Content */}
-                    <div className="flex-grow overflow-y-auto custom-scrollbar">
-                        <div className="p-6 sm:p-8 space-y-8">
-
-                            {/* Metrics Grid */}
-                            {project.metrics && project.metrics.length > 0 && (
-                                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                    {project.metrics.map((metric, idx) => (
-                                        <div key={idx} className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-700">
-                                            <div className="text-2xl font-bold text-slate-900 dark:text-white mb-1" style={{ color: project.color }}>
-                                                {metric.value}
-                                            </div>
-                                            <div className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">
-                                                {metric.label}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
                             )}
+                        </div>
+                        <h2 id="quicklook-title" className="font-display text-[clamp(1.6rem,4vw,2.3rem)] font-bold leading-tight text-ink">{project.title}</h2>
+                        {project.subtitle && <p className="mt-1 font-medium text-ink-2">{project.subtitle}</p>}
+                    </div>
+                </div>
 
-                            <div className="grid md:grid-cols-2 gap-8">
-                                {/* Problem & Solution */}
-                                <div className="space-y-6">
-                                    {project.problem && (
-                                        <div>
-                                            <h3 className="flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-white mb-3">
-                                                <Target className="w-5 h-5 text-red-500" />
-                                                The Challenge
-                                            </h3>
-                                            <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                                                {project.problem}
-                                            </p>
-                                        </div>
-                                    )}
+                {/* Scrollable Content */}
+                <div className="flex-grow overflow-y-auto">
+                    <div className="space-y-7 p-5 sm:p-7">
 
-                                    {project.solution && (
-                                        <div>
-                                            <h3 className="flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-white mb-3">
-                                                <Lightbulb className="w-5 h-5 text-amber-500" />
-                                                The Solution
-                                            </h3>
-                                            <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                                                {project.solution}
-                                            </p>
-                                        </div>
-                                    )}
-                                </div>
+                        {/* Metrics Grid */}
+                        {project.metrics && project.metrics.length > 0 && (
+                            <dl className="cs-metrics">
+                                {project.metrics.map((metric, idx) => (
+                                    <div key={idx} className="cs-metric">
+                                        <dt className="cs-metric__k">{metric.label}</dt>
+                                        <dd className="cs-metric__v">{metric.value}</dd>
+                                    </div>
+                                ))}
+                            </dl>
+                        )}
 
-                                {/* Tech Stack & Quick Info */}
-                                <div className="space-y-6">
+                        <div className="grid gap-7 md:grid-cols-2">
+                            {/* Problem & Solution */}
+                            <div className="space-y-6">
+                                {project.problem && (
                                     <div>
-                                        <h3 className="flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-white mb-3">
-                                            <Code2 className="w-5 h-5 text-cyan-500" />
+                                        <h3 className="qk__h3">
+                                            <Target size={18} aria-hidden className="text-[var(--orange)]" />
+                                            The Challenge
+                                        </h3>
+                                        <p className="leading-relaxed text-ink-2">{project.problem}</p>
+                                    </div>
+                                )}
+
+                                {project.solution && (
+                                    <div>
+                                        <h3 className="qk__h3">
+                                            <Lightbulb size={18} aria-hidden className="text-[var(--mint)]" />
+                                            The Solution
+                                        </h3>
+                                        <p className="leading-relaxed text-ink-2">{project.solution}</p>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Tech Stack & Quick Info */}
+                            <div className="space-y-6">
+                                {tech.length > 0 && (
+                                    <div>
+                                        <h3 className="qk__h3">
+                                            <Code2 size={18} aria-hidden className="text-accent-text" />
                                             Tech Stack
                                         </h3>
-                                        <div className="flex flex-wrap gap-2">
-                                            {project.technologies.map((tech, i) => (
-                                                <span
-                                                    key={i}
-                                                    className="px-3 py-1.5 text-sm rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700"
-                                                >
-                                                    {tech}
-                                                </span>
+                                        <ul className="flex flex-wrap gap-2">
+                                            {tech.map((t, i) => (
+                                                <li key={i} className="cs-tech">{t}</li>
                                             ))}
-                                        </div>
+                                        </ul>
                                     </div>
+                                )}
 
-                                    {project.impact && (
-                                        <div className="bg-cyan-50 dark:bg-cyan-900/10 p-5 rounded-xl border border-cyan-100 dark:border-cyan-900/30">
-                                            <h3 className="flex items-center gap-2 text-base font-bold text-cyan-900 dark:text-cyan-100 mb-2">
-                                                <BarChart3 className="w-4 h-4" />
-                                                Key Impact
-                                            </h3>
-                                            <p className="text-cyan-800 dark:text-cyan-200 text-sm leading-relaxed">
-                                                {project.impact}
-                                            </p>
-                                        </div>
-                                    )}
-                                </div>
+                                {project.impact && (
+                                    <div className="qk__impact">
+                                        <h3 className="qk__h3 !mb-2 !text-base">
+                                            <BarChart3 size={16} aria-hidden className="text-gold" />
+                                            Key Impact
+                                        </h3>
+                                        <p className="text-sm leading-relaxed text-ink-2">{project.impact}</p>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    {/* Footer Actions */}
-                    <div className="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 backdrop-blur-sm flex flex-col sm:flex-row gap-4 justify-between items-center flex-shrink-0">
-                        <div className="flex gap-4 w-full sm:w-auto">
-                            {project.links?.live && (
-                                <a
-                                    href={project.links.live}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors w-full sm:w-auto"
-                                >
-                                    <ExternalLink size={18} />
-                                    Live Demo
-                                </a>
-                            )}
-                        </div>
+                {/* Footer Actions */}
+                <div className="qk__foot">
+                    {live ? (
+                        internalLive ? (
+                            <button type="button" onClick={() => { onClose(); navigate(live); }} className="btn-3d btn-3d--ghost w-full sm:w-auto">
+                                <ArrowRight size={16} aria-hidden />
+                                Visit live
+                            </button>
+                        ) : (
+                            <a href={live} target="_blank" rel="noopener noreferrer" className="btn-3d btn-3d--ghost w-full sm:w-auto">
+                                <ExternalLink size={16} aria-hidden />
+                                Visit live <span className="sr-only">(opens in a new tab)</span>
+                            </a>
+                        )
+                    ) : <span className="hidden sm:block" />}
 
-                        <button
-                            onClick={handleViewFullCaseStudy}
-                            className="flex items-center justify-center gap-2 px-8 py-3 rounded-xl font-bold text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 shadow-lg shadow-cyan-500/25 transition-all hover:scale-[1.02] active:scale-[0.98] w-full sm:w-auto"
-                        >
-                            View Full Case Study
-                            <ArrowRight size={18} />
-                        </button>
-                    </div>
-                </motion.div>
-            </div>
-        </AnimatePresence>,
+                    <button type="button" onClick={handleViewFullCaseStudy} className="btn-3d w-full sm:w-auto">
+                        View full case study
+                        <ArrowRight size={16} aria-hidden />
+                    </button>
+                </div>
+            </motion.div>
+        </div>,
         document.body
     );
 };

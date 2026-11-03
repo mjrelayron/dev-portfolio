@@ -156,14 +156,14 @@ const FullStackSimulator = ({ onBack, onProceedToQuote, onShowProcessPage }) => 
   };
 
   return (
-    <div className={`fixed inset-0 bg-black/95 backdrop-blur-md z-[9999] transition-all duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-      <div className="container mx-auto px-4 py-8 h-full overflow-y-auto">
+    <div className={`lab-stage transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+      <div className="lab-stage__inner">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <button
               onClick={onBack}
-              className="flex items-center text-white/70 hover:text-white transition-colors no-focus-outline"
+              className="lab-key inline-flex items-center px-3 py-2 text-sm font-semibold"
             >
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -191,7 +191,7 @@ const FullStackSimulator = ({ onBack, onProceedToQuote, onShowProcessPage }) => 
 
         {/* Step Indicators */}
         <div className="flex justify-center mb-8">
-          <div className="flex items-center space-x-4">
+          <div className="lab-steps flex items-center space-x-4">
             {steps.map((step, index) => (
               <div key={index} className="flex items-center">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${
@@ -706,10 +706,10 @@ const FullStackSimulator = ({ onBack, onProceedToQuote, onShowProcessPage }) => 
                 {/* Main Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4">
                   <button
-                    disabled
-                    className="flex-1 bg-gray-600 text-gray-400 font-bold py-4 px-8 rounded-lg cursor-not-allowed opacity-50 transition-all duration-300"
+                    onClick={handleProceedToQuote}
+                    className="flex-1 bg-gradient-to-r from-green-400 to-emerald-600 text-white font-bold py-4 px-8 rounded-lg hover:shadow-lg transition-all duration-300"
                   >
-                    Get Your Full Stack Quote (Disabled)
+                    Get Your Full Stack Quote
                   </button>
                   
                   <button

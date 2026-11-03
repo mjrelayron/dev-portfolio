@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { track } from '@vercel/analytics/react';
 
+// onShowProcessPage is still accepted (same props as the other simulators); ProcessPage has no AI timeline yet
+// eslint-disable-next-line no-unused-vars
 const AISimulator = ({ onBack, onProceedToQuote, onShowProcessPage }) => {
     const [currentStep, setCurrentStep] = useState(0);
     const [solutionType, setSolutionType] = useState(null);
@@ -146,14 +148,14 @@ const AISimulator = ({ onBack, onProceedToQuote, onShowProcessPage }) => {
     };
 
     return (
-        <div className={`fixed inset-0 bg-black/95 backdrop-blur-md z-[9999] transition-all duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-            <div className="container mx-auto px-4 py-8 h-full overflow-y-auto">
+        <div className={`lab-stage transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+            <div className="lab-stage__inner">
                 {/* Header */}
                 <div className="mb-8">
                     <div className="flex items-center justify-between mb-4">
                         <button
                             onClick={onBack}
-                            className="flex items-center text-white/70 hover:text-white transition-colors no-focus-outline"
+                            className="lab-key inline-flex items-center px-3 py-2 text-sm font-semibold"
                         >
                             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -169,7 +171,7 @@ const AISimulator = ({ onBack, onProceedToQuote, onShowProcessPage }) => {
                         </div>
                     </div>
 
-                    <div className="flex items-center justify-center space-x-2">
+                    <div className="lab-steps flex items-center justify-center space-x-2">
                         {steps.map((step, index) => (
                             <div key={index} className="flex items-center">
                                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${index <= currentStep
@@ -402,12 +404,6 @@ const AISimulator = ({ onBack, onProceedToQuote, onShowProcessPage }) => {
                                     className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-4 rounded-lg hover:shadow-lg transition-all"
                                 >
                                     Get Implementation Quote
-                                </button>
-                                <button
-                                    onClick={() => onShowProcessPage('ai-automation')}
-                                    className="flex-1 bg-white/10 text-white font-bold py-4 rounded-lg hover:bg-white/20 transition-all"
-                                >
-                                    View Development Process
                                 </button>
                             </div>
                         </div>

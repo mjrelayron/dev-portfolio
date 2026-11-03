@@ -1,8 +1,17 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { Pause, Play } from 'lucide-react';
 import { featuredProjects } from '../data/projects';
+import { useReducedMotion } from '../hooks/useReducedMotion';
+import '../showroom/showroom.css';
 
+/**
+ * Slow marquee of headline numbers from the featured projects.
+ * Reduced motion: a static, wrapping row. Hover/focus or the button pauses it.
+ */
 const ImpactTicker = () => {
+    const reduced = useReducedMotion();
+    const [paused, setPaused] = useState(false);
+
     // Extract all metrics from featured projects
     const allMetrics = featuredProjects.flatMap(project =>
         project.metrics ? project.metrics.map(metric => ({
@@ -22,50 +31,47 @@ const ImpactTicker = () => {
         m.value.includes('+')
     );
 
-    // Duplicate list to ensure seamless infinite scroll
-    // We repeat it enough times to definitely fill the screen width
-    const tickerItems = [...impactfulMetrics, ...impactfulMetrics];
+    if (!impactfulMetrics.length) return null;
+
+    const item = (m, index, hidden) => (
+        <li key={`${m.projectId}-${index}`} className="sr-tick" aria-hidden={hidden || undefined}>
+            <span className="sr-tick__v" style={{ '--tick': m.color }}>{m.value}</span>
+            <span className="flex flex-col leading-tight">
+                <span className="sr-tick__k">{m.label}</span>
+                <span className="sr-tick__p">{m.projectTitle}</span>
+            </span>
+        </li>
+    );
+
+    if (reduced) {
+        return (
+            <section className="sr-ticker sr-ticker--static" aria-label="Impact across featured projects">
+                <ul className="flex flex-wrap gap-x-8 gap-y-4 px-5 py-4">
+                    {impactfulMetrics.slice(0, 8).map((m, i) => item(m, i, false))}
+                </ul>
+            </section>
+        );
+    }
 
     return (
-        <div className="w-full bg-base-100/50 border-y border-base-content/5 overflow-hidden py-6 backdrop-blur-md z-10 relative">
-            {/* Gradient Masks for smooth fade out at edges */}
-            <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-base-100 to-transparent z-20 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-base-100 to-transparent z-20 pointer-events-none" />
-
-            <div className="flex overflow-hidden">
-                <motion.div
-                    className="flex gap-16 whitespace-nowrap px-8"
-                    animate={{ x: "-50%" }}
-                    transition={{
-                        repeat: Infinity,
-                        ease: "linear",
-                        duration: 60 // Slow, readable speed
-                    }}
-                >
-                    {/* Render items twice to create the loop, but we need a container that holds both sets */}
-                    {/* Actually, the standard way is to have the container width be huge and translate -50% of it. 
-              If tickerItems contains 2 sets, we translate -50% which is exactly 1 set length. */}
-                    {tickerItems.map((item, index) => (
-                        <div key={`${item.projectId}-${index}`} className="flex items-center gap-3 group select-none">
-                            <span
-                                className="text-3xl font-black tracking-tight"
-                                style={{ color: item.color }}
-                            >
-                                {item.value}
-                            </span>
-                            <div className="flex flex-col leading-tight">
-                                <span className="text-xs font-bold text-base-content/80 uppercase tracking-wider">
-                                    {item.label}
-                                </span>
-                                <span className="text-[10px] text-base-content/40 font-medium">
-                                    {item.projectTitle}
-                                </span>
-                            </div>
-                        </div>
-                    ))}
-                </motion.div>
+        <section className="sr-ticker" aria-label="Impact across featured projects">
+            <div className="sr-ticker__clip">
+                {/* two identical sets; translating -50% loops seamlessly */}
+                <ul className={`sr-ticker__track ${paused ? 'is-paused' : ''}`}>
+                    {impactfulMetrics.map((m, i) => item(m, i, false))}
+                    {impactfulMetrics.map((m, i) => item(m, i + impactfulMetrics.length, true))}
+                </ul>
             </div>
-        </div>
+            <button
+                type="button"
+                className="sr-ticker__toggle"
+                onClick={() => setPaused((p) => !p)}
+                aria-pressed={paused}
+                aria-label={paused ? 'Play impact ticker' : 'Pause impact ticker'}
+            >
+                {paused ? <Play size={14} aria-hidden /> : <Pause size={14} aria-hidden />}
+            </button>
+        </section>
     );
 };
 

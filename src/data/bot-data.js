@@ -23,7 +23,7 @@ export const BOT_PROJECT_DATA = [
         title: "SkillFoundri",
         technologies: ["React", "Node.js", "MongoDB"],
         summary: "Project-based learning platform with mentorship.",
-        overview: "SkillFoundri combines project management, coursework, and mentorship into a single learning platform. As COO and co-founder, I guided the product vision and ensured the build supported both cohort-based learning and self-paced journeys.",
+        overview: "SkillFoundri combines project management, coursework, and mentorship into a single learning platform. As co-founder and CTO / Lead Developer, I guided the product vision and ensured the build supported both cohort-based learning and self-paced journeys.",
         problem: "Aspiring tech professionals lack structured, industry-aligned practice that goes beyond tutorials.",
         solution: "Delivered a project-based curriculum platform with mentorship, progress tracking, and community spaces to simulate real sprints.",
         impact: "Helped over 300 learners build portfolio-ready artifacts and land freelance work across ASEAN markets.",
@@ -155,5 +155,12 @@ export const BOT_PROJECT_DATA = [
         solution: "Deployed an always-on AI voice agent to handle common queries, appointment setting, and triage.",
         impact: "Reduced wait times to <10 seconds and handled 60% of inbound volume without human intervention.",
         links: { caseStudy: "/projects/voiceops-agent" }
+    },
+    {
+        title: "MedOps",
+        technologies: ["Next.js", "TypeScript", "Supabase", "PostgreSQL", "Google Calendar API"],
+        summary: "Internal patient operations app for ACCC (American Critical Care Consult).",
+        overview: "Developed while working as a Patient Coordinator at ACCC (Jan–Aug 2026): patient records, visit scheduling synced with Google Calendar, recertification tracking, facilities map, visit notes and reminders.",
+        links: { caseStudy: "/projects/accc-medops" }
     }
 ];

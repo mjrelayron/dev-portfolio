@@ -1,0 +1,1 @@
+{"runs":[{"id":"import-railway-export","startedAt":"2025-10-11T10:28:10.858Z","finishedAt":"2025-10-11T10:28:10.858Z","trigger":"import","status":"success","note":"Imported the last export of the old Railway database.","found":375,"added":375,"updated":0,"total":375,"perTool":{"n8n":283,"zapier":92}}]}
