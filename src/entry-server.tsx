@@ -23,3 +23,5 @@ export async function render(url: string): Promise<{ html: string; seo: SeoData 
 
 export { headTags } from './app/Seo';
 export { prerenderPaths } from './app/prerenderPaths';
+export { projects } from './data/portfolio';
+export { profile } from './data/profile';

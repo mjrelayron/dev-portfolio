@@ -394,3 +394,9 @@ main:focus { outline: none; }
 .world-card.is-hidden { opacity: 0; transform: translateY(-12px); visibility: hidden; }
 .intro-title .intro-word { text-shadow: 0 2px 0 #0f1228, 0 0 30px rgba(15, 18, 40, 0.9); }
 .intro-tag { text-shadow: 0 0 12px rgba(15, 18, 40, 1); }
+
+/* mobile: page content scrolls under the top HUD, so give it a solid backdrop */
+@media (max-width: 1023px) {
+  .layout-destination .hud-top,
+  .layout-plain .hud-top { background: linear-gradient(180deg, var(--navy) 70%, rgba(23, 27, 53, 0)); }
+}

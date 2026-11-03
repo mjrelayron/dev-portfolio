@@ -35,7 +35,7 @@ try {
     for (const r of routes) {
       await page.goto(`http://localhost:${PORT}${r}`, { waitUntil: 'networkidle' });
       await page.waitForTimeout(MODE === 'dev' ? 2500 : 1300);
-      const name = `${(r.replace(/\//g, '_').replace(/^_/, '') || 'home')}-${w}.png`;
+      const name = `${(r.replace(/[?=&]/g, '_').replace(/\//g, '_').replace(/^_/, '') || 'home')}-${w}.png`;
       await page.screenshot({ path: path.join(outDir, name) });
     }
     await ctx.close();
