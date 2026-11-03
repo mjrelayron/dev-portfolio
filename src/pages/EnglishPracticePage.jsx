@@ -77,7 +77,7 @@ const EnglishPracticePage = () => {
         setIsLoading(true);
 
         try {
-            const response = await fetch('https://mjre-portfolio.vercel.app/api/chat', {
+            const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

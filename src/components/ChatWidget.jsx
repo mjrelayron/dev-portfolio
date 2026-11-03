@@ -280,7 +280,7 @@ const ChatWidget = () => {
 
     try {
       const contextHistory = messages.slice(-30).map(m => ({ role: m.role, text: m.content }));
-      const apiUrl = 'https://mjre-portfolio.vercel.app/api/chat';
+      const apiUrl = '/api/chat'; // same-origin: works on every deployment (production + previews)
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

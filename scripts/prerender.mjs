@@ -8,7 +8,7 @@ import { buildOgImages } from './og-images.mjs';
 const dist = path.resolve('dist');
 const template = fs.readFileSync(path.join(dist, 'index.html'), 'utf8');
 const { render, headTags, prerenderPaths, projects, profile } = await import(pathToFileURL(path.resolve('dist-ssr/entry-server.js')).href);
-const SITE = 'https://mjre-portfolio.vercel.app';
+const SITE = profile.siteUrl;
 
 const paths = prerenderPaths();
 let ok = 0;

@@ -38,7 +38,7 @@ export const profile = {
     github: 'https://github.com/bonch223',
     facebook: 'https://www.facebook.com/bonch223/',
   },
-  siteUrl: 'https://mjre-portfolio.vercel.app',
+  siteUrl: 'https://dev-portfolio-mel-proj.vercel.app',
 } as const;
 
 export type Profile = typeof profile;

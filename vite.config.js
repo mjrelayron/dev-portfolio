@@ -32,7 +32,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://mjre-portfolio.vercel.app',
+        target: 'https://dev-portfolio-mel-proj.vercel.app',
         changeOrigin: true,
         secure: true,
       },
