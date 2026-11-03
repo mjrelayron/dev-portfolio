@@ -169,20 +169,27 @@ You are here to help visitors understand Melvin, his work, and what he brings to
         **MelBot:**
         `;
 
-        // Call Gemini API via REST
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite-preview-02-05:generateContent?key=${process.env.GEMINI_API_KEY}`;
-
-        const apiResponse = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                contents: [{
-                    parts: [{ text: prompt }]
-                }]
-            })
-        });
+        // Call Gemini API via REST. Google retires model versions over time, so try
+        // GEMINI_MODEL (optional override) first, then the always-current aliases;
+        // move on only when a model isn't available.
+        const models = [process.env.GEMINI_MODEL, 'gemini-flash-lite-latest', 'gemini-flash-latest', 'gemini-2.5-flash'].filter(Boolean);
+        let apiResponse;
+        for (const model of models) {
+            apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-goog-api-key': process.env.GEMINI_API_KEY
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{ text: prompt }]
+                    }]
+                })
+            });
+            if (apiResponse.status !== 404) break;
+            console.warn(`Gemini model unavailable, trying next: ${model}`);
+        }
 
         if (!apiResponse.ok) {
             const errorText = await apiResponse.text();
@@ -194,7 +201,8 @@ You are here to help visitors understand Melvin, his work, and what he brings to
 
         res.status(200).json({ response: text });
     } catch (error) {
+        // full details stay in the server logs; the browser gets a plain message
         console.error('Chat Error:', error);
-        res.status(500).json({ error: 'Failed to generate response', details: error.message, stack: error.stack });
+        res.status(500).json({ error: 'Failed to generate response', details: 'The assistant is unavailable right now. Please try again in a moment.' });
     }
 }
