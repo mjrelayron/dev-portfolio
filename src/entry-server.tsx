@@ -25,3 +25,6 @@ export { headTags } from './app/Seo';
 export { prerenderPaths } from './app/prerenderPaths';
 export { projects } from './data/portfolio';
 export { profile } from './data/profile';
+export { experience } from './data/career';
+export { skillGroups } from './data/skills';
+export { destinations } from './data/destinations';

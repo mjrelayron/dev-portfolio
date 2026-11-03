@@ -4,10 +4,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { buildOgImages } from './og-images.mjs';
+import { writeKnowledge } from './bot-knowledge.mjs';
 
 const dist = path.resolve('dist');
 const template = fs.readFileSync(path.join(dist, 'index.html'), 'utf8');
-const { render, headTags, prerenderPaths, projects, profile } = await import(pathToFileURL(path.resolve('dist-ssr/entry-server.js')).href);
+const { render, headTags, prerenderPaths, projects, profile, experience, skillGroups } = await import(pathToFileURL(path.resolve('dist-ssr/entry-server.js')).href);
 const SITE = profile.siteUrl;
 
 const paths = prerenderPaths();
@@ -42,6 +43,8 @@ fs.writeFileSync(
 );
 fs.writeFileSync(path.join(dist, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`);
 const og = await buildOgImages({ dist, projects, profile });
+const kb = writeKnowledge({ profile, projects, experience, skillGroups });
+console.log(`bot knowledge: api/knowledge.json (${(kb / 1024).toFixed(0)} KB)`);
 console.log(`og images: ${og + 1}`);
 fs.rmSync(path.resolve('dist-ssr'), { recursive: true, force: true });
 console.log(`prerendered ${ok}/${paths.length} routes`);

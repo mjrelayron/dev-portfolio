@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { DevBot } from '../mascot/DevBot';
 import { useSettings } from '../store/useSettings';
 import '../lab/chat-widget.css';
-import emailjs from '@emailjs/browser';
+import { EmailStatus, parseEmailToken } from './chat/EmailHandoff';
 import { aiContext } from '../data/ai-context';
 
 // Scheduler Component
@@ -43,7 +43,7 @@ const QuoteCard = ({ data }) => {
     <div className="bg-white dark:bg-white/5 p-4 rounded-xl border border-gray-200 dark:border-white/10 shadow-lg my-3 max-w-sm mx-auto transform transition-all hover:scale-[1.02]">
       <div className="flex justify-between items-start mb-3 border-b border-gray-100 dark:border-white/5 pb-2">
         <div>
-          <h3 className="text-lg font-bold text-gray-900 dark:text-white bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-blue-500">
+          <h3 className="text-lg font-bold text-white">
             {data.package_title}
           </h3>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{data.package_summary}</p>
@@ -100,28 +100,6 @@ const QuoteCard = ({ data }) => {
   );
 };
 
-// EmailStatus Component
-const EmailStatus = ({ data, sendEmail }) => {
-  const [status, setStatus] = useState('sending');
-  const hasSent = useRef(false);
-
-  useEffect(() => {
-    let mounted = true;
-    const send = async () => {
-      if (hasSent.current) return;
-      hasSent.current = true;
-      const success = await sendEmail(data);
-      if (mounted) setStatus(success ? 'success' : 'error');
-    };
-    send();
-    return () => { mounted = false; };
-  }, [data, sendEmail]);
-
-  if (status === 'sending') return <div className="p-3 bg-cyan-50 dark:bg-cyan-900/20 rounded-lg border border-cyan-100 dark:border-cyan-800 flex items-center gap-2 my-2"><div className="w-4 h-4 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin"></div><span className="text-sm text-cyan-700 dark:text-cyan-300">Sending details to Melvin...</span></div>;
-  if (status === 'success') return <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-100 dark:border-green-800 flex items-center gap-2 my-2"><svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg><span className="text-sm text-green-700 dark:text-green-300">Sent! Melvin will be in touch.</span></div>;
-  return <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-100 dark:border-red-800 flex items-center gap-2 my-2"><svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg><span className="text-sm text-red-700 dark:text-red-300">Failed to send. Please try again.</span></div>;
-};
-
 // Typing Effect Component
 const TypingMessage = ({ content, onComplete, renderContent }) => {
   const [displayedContent, setDisplayedContent] = useState('');
@@ -135,16 +113,13 @@ const TypingMessage = ({ content, onComplete, renderContent }) => {
   return renderContent(displayedContent);
 };
 
+const GREETING = "Hi! I'm MelBot, Melvin's assistant. Ask me about his projects, skills, experience or services. If I don't know something, I'll pass your question to Melvin.";
+
 const ChatWidget = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const introSeen = useSettings((s) => s.introSeen);
   const [isOpen, setIsOpen] = useState(false);
-  const EMAILJS_SERVICE_ID = 'service_2wtte0j';
-  const EMAILJS_TEMPLATE_ID = 'template_5arjl6k';
-  const EMAILJS_PUBLIC_KEY = 'tBuSbZ57Q0Hn6k-dJ';
-
-  useEffect(() => { emailjs.init(EMAILJS_PUBLIC_KEY); }, []);
 
   const [messages, setMessages] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -155,23 +130,8 @@ const ChatWidget = () => {
         if (now - parseInt(savedTime) < 48 * 60 * 60 * 1000) return JSON.parse(saved);
       }
     }
-    return [{ role: 'assistant', content: "Hi! I'm MelBot. Ask me anything about the developer's skills or projects.", animate: false }];
+    return [{ role: 'assistant', content: GREETING, animate: false }];
   });
-
-  const sendEmail = async (data) => {
-    try {
-      const transcriptText = messages.map(m => `[${m.role.toUpperCase()}]: ${m.content}`).join('\n\n');
-      const templateParams = {
-        to_name: 'Melvin',
-        from_name: data.name || 'User',
-        from_email: data.email || 'No Email Provided',
-        message: `Type: ${data.type || 'Inquiry'}\n${data.date ? `Requested Date: ${data.date}` : ''}\n${data.time ? `Requested Time: ${data.time}` : ''}\n\nPain Points: ${data.painPoints || 'N/A'}\nGoals: ${data.goals || 'N/A'}\nSummary: ${data.summary || 'N/A'}\n\n--- FULL TRANSCRIPT ---\n${transcriptText}`,
-        reply_to: data.email || '',
-      };
-      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams, EMAILJS_PUBLIC_KEY);
-      return true;
-    } catch (error) { console.error('EmailJS Error:', error); return false; }
-  };
 
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -180,7 +140,7 @@ const ChatWidget = () => {
   const messagesEndRef = useRef(null);
   const recognitionRef = useRef(null);
 
-  const starterQuestions = ["What is Melvin's skills?", "Show me Melvin's projects", "How to Contact Melvin"];
+  const starterQuestions = ["Show me Melvin's projects", "What are Melvin's skills?", "I have a question for Melvin"];
   const scrollToBottom = () => { messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); };
 
   useEffect(() => {
@@ -233,7 +193,7 @@ const ChatWidget = () => {
   }, [messages, isMuted]);
 
   const clearHistory = () => {
-    const defaultMsg = [{ role: 'assistant', content: "Hi! I'm MelBot. Ask me anything about the developer's skills or projects.", animate: true }];
+    const defaultMsg = [{ role: 'assistant', content: GREETING, animate: true }];
     setMessages(defaultMsg);
     if (typeof window !== 'undefined') {
       const messagesToSave = defaultMsg.map(({ animate, ...msg }) => msg);
@@ -360,15 +320,8 @@ const ChatWidget = () => {
     const renderedContent = [];
     let projectBuffer = [];
     lines.forEach((line, index) => {
-      if (line.includes(':::SEND_EMAIL|')) {
-        const match = line.match(/:::SEND_EMAIL\|(.+?):::/);
-        if (match) {
-          try {
-            const emailData = JSON.parse(match[1]);
-            renderedContent.push(<EmailStatus key={`email-${index}`} data={emailData} sendEmail={sendEmail} />);
-          } catch (e) { console.error("Failed to parse email token", e); }
-        }
-      }
+      const email = line.includes(':::SEND_EMAIL|') ? parseEmailToken(line) : null;
+      if (email) renderedContent.push(<EmailStatus key={`email-${index}`} data={email.data} messages={messages} />);
       if (line.trim().startsWith('>>>')) {
         const match = line.match(/>>> :::([^|]+)\|(.+?)::: - (.+)/);
         if (match) projectBuffer.push({ title: match[1], link: match[2], desc: match[3] });

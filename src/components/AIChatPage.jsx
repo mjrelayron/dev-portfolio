@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { aiContext } from '../data/ai-context';
 import { track } from '@vercel/analytics/react';
 import { useNavigate } from 'react-router-dom';
+import { EmailStatus, parseEmailToken } from './chat/EmailHandoff';
 
 const AIChatPage = () => {
     const navigate = useNavigate();
@@ -21,7 +22,7 @@ const AIChatPage = () => {
                 }
             }
         }
-        return [{ role: 'assistant', content: "Hello! I'm MelBot. I can tell you all about the developer's work, skills, and experience. What would you like to know?" }];
+        return [{ role: 'assistant', content: "Hi! I'm MelBot, Melvin's assistant. Ask me about his projects, skills, experience or services. If I don't know something, I'll pass your question to Melvin." }];
     });
 
     const [input, setInput] = useState('');
@@ -119,6 +120,13 @@ const AIChatPage = () => {
         let projectBuffer = [];
 
         lines.forEach((line, index) => {
+            // "Send to Melvin" handoff: render the email status card, keep any text around it
+            const email = line.includes(':::SEND_EMAIL|') ? parseEmailToken(line) : null;
+            if (email) {
+                renderedContent.push(<EmailStatus key={`email-${index}`} data={email.data} messages={messages} />);
+                line = email.rest;
+            }
+
             // Check for Project Line Marker (>>>)
             if (line.trim().startsWith('>>>')) {
                 const match = line.match(/>>> :::([^|]+)\|(.+?)::: - (.+)/);
