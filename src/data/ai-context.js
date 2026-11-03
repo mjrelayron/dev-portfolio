@@ -43,7 +43,7 @@ PROJECTS:
 16. LODStech.io (https://lodstech-io.vercel.app/): studio site with a live, in-page project showroom (Next.js/React Three Fiber).
 17. Northwood II Apartments (https://nw2apts.vercel.app/): website for a 104-unit apartment community in Shreveport, LA.
 18. Rage Fitness Gym management app: https://rage-fitness-gym.vercel.app/v2/
-11. MedOps: Internal patient operations app built for ACCC (American Critical Care Consult) while working there as Patient Coordinator, Jan–Aug 2026 (Next.js/TypeScript/Supabase).
+11. MedOps (https://accc-medops.vercel.app/): Internal patient operations app built for ACCC (American Critical Care Consult) while working there as Patient Coordinator, Jan–Aug 2026 (Next.js/TypeScript/Supabase).
 
 CONTACT:
 - Email: mjr.elayron@gmail.com

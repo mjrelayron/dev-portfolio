@@ -808,7 +808,7 @@ export const otherProjects = [
     overview:
       'MedOps is the internal tool I developed while working as a Patient Coordinator at ACCC. It brings patient records, visit scheduling, recertification tracking and facility information into one place for the coordination team.',
     year: 2026,
-    status: 'Internal',
+    status: 'Live',
     category: 'Web Development',
     role: 'Developer (while Patient Coordinator)',
     technologies: ['Next.js', 'React', 'TypeScript', 'Supabase', 'PostgreSQL', 'Tailwind CSS', 'Google Calendar API', 'Leaflet', 'Recharts', 'Zustand'],
@@ -826,7 +826,7 @@ export const otherProjects = [
     image: liveAssets.medops,
     gallery: [liveAssets.medops],
     links: buildLinks({
-      live: null,
+      live: 'https://accc-medops.vercel.app/',
     }),
   },
   {
