@@ -627,7 +627,7 @@ export const featuredProjects = [
 export const otherProjects = [
   {
     id: 'accc-medops',
-    featured: false,
+    featured: true,
     slug: 'accc-medops',
     title: 'MedOps',
     subtitle: 'Patient Operations Platform for ACCC',
