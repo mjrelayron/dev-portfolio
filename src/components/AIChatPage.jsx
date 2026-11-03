@@ -38,7 +38,11 @@ const AIChatPage = () => {
     ];
 
     const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        const end = messagesEndRef.current;
+        // embedded in a page: scroll the log itself so the surrounding page doesn't jump
+        const log = end?.closest('.lab-chat__log');
+        if (log) log.scrollTo({ top: log.scrollHeight, behavior: 'smooth' });
+        else end?.scrollIntoView({ behavior: "smooth" });
     };
 
     // Persist messages to localStorage
@@ -272,61 +276,52 @@ const AIChatPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white flex flex-col transition-colors duration-300">
+        <div className="lab-chat">
             {/* Header */}
-            <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4 flex items-center justify-between sticky top-0 z-10 transition-colors duration-300">
-                <div className="flex items-center">
-                    <button onClick={() => navigate('/')} className="mr-4 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                        </svg>
-                    </button>
-                    <div className="flex items-center">
-                        <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center mr-3 shadow-lg">
-                            <span className="text-xl">🤖</span>
-                        </div>
-                        <div>
-                            <h1 className="font-bold text-lg text-gray-900 dark:text-white">MelBot</h1>
-                            <div className="flex items-center text-xs text-green-500 dark:text-green-400">
-                                <span className="w-2 h-2 bg-green-500 dark:bg-green-400 rounded-full mr-1 animate-pulse"></span>
-                                Powered by Gemini 1.5 Pro
-                            </div>
-                        </div>
+            <header className="lab-chat__bar">
+                <div className="flex items-center gap-3 min-w-0">
+                    <div className="lab-chat__avatar" aria-hidden="true">🤖</div>
+                    <div className="min-w-0">
+                        <h2 className="font-bold text-lg text-white leading-tight">MelBot</h2>
+                        <p className="flex items-center text-xs text-green-400">
+                            <span className="w-2 h-2 bg-green-400 rounded-full mr-1.5" aria-hidden="true"></span>
+                            Online · powered by Gemini
+                        </p>
                     </div>
                 </div>
+                <button onClick={() => navigate('/lab')} className="lab-key inline-flex items-center gap-1.5 px-3 py-2 text-sm font-semibold">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Lab
+                </button>
             </header>
 
             {/* Chat Area */}
-            <main className="flex-1 overflow-y-auto p-4 md:p-8 max-w-4xl mx-auto w-full space-y-6">
+            <div className="lab-chat__log space-y-5" role="log" aria-live="polite" aria-label="Conversation with MelBot">
                 {messages.map((msg, idx) => (
                     <div
                         key={idx}
                         className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                     >
-                        <div className={`flex max-w-[85%] md:max-w-[70%] ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+                        <div className={`flex max-w-[88%] md:max-w-[75%] ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
                             {/* Avatar */}
-                            <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center mt-1 ${msg.role === 'user' ? 'bg-cyan-600 ml-3' : 'bg-gray-200 dark:bg-gray-700 mr-3'
-                                }`}>
+                            <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center mt-1 text-sm ${msg.role === 'user' ? 'lab-chat__me ml-2.5' : 'bg-gray-700 mr-2.5'}`} aria-hidden="true">
                                 {msg.role === 'user' ? '👤' : '🤖'}
                             </div>
 
                             {/* Bubble */}
-                            <div
-                                className={`p-4 rounded-2xl text-sm md:text-base leading-relaxed shadow-md ${msg.role === 'user'
-                                    ? 'bg-cyan-600 text-white rounded-tr-none'
-                                    : 'bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700 rounded-tl-none'
-                                    }`}
-                            >
+                            <div className={`lab-bubble ${msg.role === 'user' ? 'lab-bubble--me' : 'lab-bubble--bot'}`}>
+                                <span className="sr-only">{msg.role === 'user' ? 'You:' : 'MelBot:'}</span>
                                 {renderMessageContent(msg.content)}
                                 {msg.role === 'assistant' && (
                                     <button
                                         onClick={() => speakResponse(msg.content)}
-                                        className="block mt-2 text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors"
+                                        className="mt-2 inline-flex items-center gap-1 text-xs text-gray-400 hover:text-white transition-colors"
                                         title="Read aloud"
                                     >
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                                        </svg>
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" /></svg>
+                                        <span>Read aloud</span>
                                     </button>
                                 )}
                             </div>
@@ -335,77 +330,73 @@ const AIChatPage = () => {
                 ))}
 
                 {isLoading && (
-                    <div className="flex justify-start">
+                    <div className="flex justify-start" aria-label="MelBot is typing">
                         <div className="flex items-center space-x-2 ml-11">
-                            <div className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce"></div>
-                            <div className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce delay-100"></div>
-                            <div className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce delay-200"></div>
+                            <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce"></div>
+                            <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce delay-100"></div>
+                            <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce delay-200"></div>
                         </div>
                     </div>
                 )}
                 <div ref={messagesEndRef} />
-            </main>
+            </div>
 
             {/* Input Area */}
-            <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-4 transition-colors duration-300">
-                <div className="max-w-4xl mx-auto w-full">
-                    {/* Starter Chips */}
-                    {messages.length < 3 && (
-                        <div className="flex flex-wrap gap-2 mb-4 justify-center">
-                            {starterQuestions.map((q, i) => (
-                                <button
-                                    key={i}
-                                    onClick={() => handleSubmit(null, q)}
-                                    className="px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600 rounded-full text-sm text-gray-700 dark:text-gray-300 transition-all hover:scale-105"
-                                >
-                                    {q}
-                                </button>
-                            ))}
-                        </div>
-                    )}
-
-                    <form onSubmit={handleSubmit} className="relative flex items-center">
-                        <input
-                            type="text"
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            placeholder="Ask me anything..."
-                            className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-full pl-6 pr-24 py-4 text-gray-900 dark:text-white focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all shadow-inner"
-                        />
-
-                        <div className="absolute right-2 flex items-center space-x-1">
-                            {/* Voice Button */}
+            <div className="lab-chat__input">
+                {/* Starter Chips */}
+                {messages.length < 3 && (
+                    <div className="flex flex-wrap gap-2 mb-3">
+                        {starterQuestions.map((q, i) => (
                             <button
-                                type="button"
-                                onClick={handleVoiceInput}
-                                className={`p-2 rounded-full transition-all ${isListening
-                                    ? 'bg-red-500 text-white animate-pulse'
-                                    : 'text-gray-400 hover:text-gray-600 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-700'
-                                    }`}
-                                title="Voice Input"
+                                key={i}
+                                onClick={() => handleSubmit(null, q)}
+                                className="lab-chip-btn"
                             >
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                                </svg>
+                                {q}
                             </button>
-
-                            {/* Send Button */}
-                            <button
-                                type="submit"
-                                disabled={!input.trim() || isLoading}
-                                className="p-2 bg-cyan-600 text-white rounded-full hover:bg-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg"
-                            >
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                                </svg>
-                            </button>
-                        </div>
-                    </form>
-                    <div className="text-center mt-2 text-xs text-gray-500 dark:text-gray-400">
-                        Voice input supported in Chrome/Edge. Press the mic to speak.
+                        ))}
                     </div>
-                </div>
-            </footer>
+                )}
+
+                <form onSubmit={handleSubmit} className="relative flex items-center">
+                    <label htmlFor="melbot-page-input" className="sr-only">Message MelBot</label>
+                    <input
+                        id="melbot-page-input"
+                        type="text"
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        placeholder="Ask me anything..."
+                        className="lab-chat__field"
+                    />
+
+                    <div className="absolute right-2 flex items-center gap-1">
+                        {/* Voice Button */}
+                        <button
+                            type="button"
+                            onClick={handleVoiceInput}
+                            className={`lab-icon-btn ${isListening ? 'is-live' : ''}`}
+                            title="Voice Input"
+                            aria-label={isListening ? 'Stop voice input' : 'Voice input'}
+                            aria-pressed={isListening}
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg>
+                        </button>
+
+                        {/* Send Button */}
+                        <button
+                            type="submit"
+                            disabled={!input.trim() || isLoading}
+                            className="lab-icon-btn lab-icon-btn--send"
+                            aria-label="Send message"
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14m-6-6l6 6-6 6" /></svg>
+                        </button>
+                    </div>
+                </form>
+                <p className="text-center mt-2 text-xs text-gray-400">
+                    Voice input supported in Chrome/Edge. Press the mic to speak.
+                </p>
+            </div>
         </div>
     );
 };

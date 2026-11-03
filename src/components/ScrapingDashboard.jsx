@@ -30,6 +30,7 @@ const ScrapingDashboard = () => {
   const [hideFailedJobs, setHideFailedJobs] = useState(false);
   const [showJobDetails, setShowJobDetails] = useState(false);
   const [jobDetails, setJobDetails] = useState(null);
+  const [backendOffline, setBackendOffline] = useState(false); // shown instead of a misleading empty state
 
   // New job form
   const [newJob, setNewJob] = useState({
@@ -65,6 +66,7 @@ const ScrapingDashboard = () => {
         fetch(`${BACKEND_URL}/api/jobs/dashboard/stats`),
         fetch(`${BACKEND_URL}/api/jobs/schedules`)
       ]);
+      setBackendOffline(false);
 
       if (jobsRes.ok) {
         const jobsData = await jobsRes.json();
@@ -82,6 +84,7 @@ const ScrapingDashboard = () => {
       }
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error);
+      setBackendOffline(true);
     }
   };
 
@@ -350,21 +353,31 @@ const ScrapingDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 py-8 px-4">
+    <div className="lab-dashboard">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2 flex items-center">
-            <BarChart3 className="w-10 h-10 mr-3 text-cyan-400" />
-            Scraping Dashboard
-          </h1>
+        <div className="mb-6 flex flex-wrap items-center gap-3">
+          <span className="chip">
+            <BarChart3 className="w-4 h-4 text-cyan-400" aria-hidden="true" />
+            Live · {BACKEND_URL.replace('https://', '')}
+          </span>
           <p className="text-gray-400">Monitor and control video scraping jobs</p>
         </div>
+
+        {backendOffline && (
+          <div className="mb-6 flex items-start gap-3 rounded-2xl border border-yellow-500/40 bg-yellow-500/10 p-4" role="status">
+            <AlertCircle className="w-5 h-5 mt-0.5 flex-shrink-0 text-yellow-400" aria-hidden="true" />
+            <div>
+              <p className="font-semibold text-white">Can't reach the scraping backend right now</p>
+              <p className="text-sm text-gray-300">The Railway service may be asleep or blocking this origin. Job data will appear once it responds — try Refresh in a moment.</p>
+            </div>
+          </div>
+        )}
 
         {/* Stats Cards */}
         {stats && (
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-            <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+            <div className="lab-tile p-5">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-400 text-sm mb-1">Running Jobs</p>
@@ -374,7 +387,7 @@ const ScrapingDashboard = () => {
               </div>
             </div>
 
-            <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+            <div className="lab-tile p-5">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-400 text-sm mb-1">Completed</p>
@@ -384,7 +397,7 @@ const ScrapingDashboard = () => {
               </div>
             </div>
 
-            <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+            <div className="lab-tile p-5">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-400 text-sm mb-1">Failed</p>
@@ -394,7 +407,7 @@ const ScrapingDashboard = () => {
               </div>
             </div>
 
-            <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+            <div className="lab-tile p-5">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-400 text-sm mb-1">Videos Scraped</p>
@@ -658,7 +671,7 @@ const ScrapingDashboard = () => {
         )}
 
         {/* Jobs List */}
-        <div className="bg-white/5 border border-white/10 rounded-xl p-6 mb-8">
+        <div className="lab-tile p-5 mb-8">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-white">Recent Jobs</h2>
             <p className="text-sm text-gray-400">Click on any job to view detailed logs and progress</p>
@@ -791,7 +804,7 @@ const ScrapingDashboard = () => {
         </div>
 
         {/* Schedules */}
-        <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+        <div className="lab-tile p-5">
           <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
             <Calendar className="w-6 h-6 mr-2 text-cyan-400" />
             Automated Schedules

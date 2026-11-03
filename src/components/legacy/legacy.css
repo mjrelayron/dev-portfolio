@@ -1064,7 +1064,7 @@
     height: 2.5rem;
   }
   
-  .about-section .flex-shrink-0.w-80 .bg-white\\/5 {
+  .about-section .flex-shrink-0.w-80 .bg-white\/5 {
     padding: 0.75rem;
   }
   
@@ -1291,7 +1291,7 @@
     gap: 0.75rem;
   }
   
-  .projects-section .min-w-\\[200px\\] {
+  .projects-section .min-w-\[200px\] {
     min-width: 100%;
   }
 }
@@ -1417,7 +1417,7 @@
     gap: 0.75rem;
   }
   
-  .projects-section .min-w-\\[200px\\] {
+  .projects-section .min-w-\[200px\] {
     min-width: 100%;
   }
   
@@ -2444,3 +2444,299 @@
   border-color: var(--line-strong);
 }
 .tool-shell .min-h-screen { min-height: auto; }
+
+/* ══════════════ DEVELOPERVERSE in-page tool stage ══════════════
+   The selector / simulators / quote generators / process page used to be
+   full-screen overlays. They now render inside the destination panel
+   (desktop) or the page (mobile), so the HUD bar and dock stay visible. */
+.tool-shell {
+  --pane: var(--navy-2);
+  --pane-2: var(--navy);
+  accent-color: var(--accent);
+}
+@media (min-width: 1024px) {
+  .layout-destination .tool-shell { --pane: var(--navy); --pane-2: var(--navy-2); }
+}
+/* the tools lock body scroll for their overlay; in-page that would freeze mobile */
+body:has(.lab-flow) { overflow: auto !important; }
+.lab-flow { scroll-margin-top: calc(var(--hud-top) + 12px); }
+@media (min-width: 1024px) { .lab-flow { scroll-margin-top: 8px; } }
+
+.tool-shell .lab-stage { position: relative; }
+.tool-shell .lab-stage__inner { max-width: 72rem; margin: 0 auto; }
+.tool-shell .lab-quote {
+  position: relative;
+  max-width: 56rem;
+  margin: 0 auto;
+  background: var(--pane);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: var(--highlight-top), 0 20px 50px -28px rgba(5, 7, 20, 0.8);
+}
+.tool-shell .lab-quote--padded { padding: clamp(1.25rem, 3vw, 2rem); }
+/* quote generators' sticky header/footer: solid, and clear of the mobile HUD/dock */
+.tool-shell .lab-quote .sticky { background: var(--pane) !important; background-image: none !important; border-color: var(--line) !important; }
+.tool-shell .lab-quote .sticky.top-0 { top: var(--hud-top); border-radius: 20px 20px 0 0; }
+.tool-shell .lab-quote .sticky.bottom-0 { bottom: calc(var(--hud-dock) + env(safe-area-inset-bottom)); border-radius: 0 0 20px 20px; }
+@media (min-width: 1024px) {
+  .layout-destination .tool-shell .lab-quote .sticky.top-0 { top: -22px; }
+  .layout-destination .tool-shell .lab-quote .sticky.bottom-0 { bottom: -40px; }
+}
+
+/* panes: flat raised trays, no glass, no pulsing glow */
+.tool-shell .glass-content-pane {
+  background: var(--pane);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: var(--highlight-top);
+  animation: none;
+  padding: clamp(1.1rem, 3vw, 2rem);
+}
+.tool-shell .card { animation: none; }
+.tool-shell .card:hover { transform: none; }
+.tool-shell h1, .tool-shell h2, .tool-shell h3 { font-family: var(--font-display); letter-spacing: -0.01em; }
+
+/* overlay modals that remain (Scraping Dashboard): between the HUD bar and the dock */
+.tool-shell .fixed.inset-0 { top: var(--hud-top); bottom: calc(var(--hud-dock) + 6px); }
+.tool-shell .bg-black\/50 { background-color: rgba(15, 18, 40, 0.88) !important; }
+
+/* ── accent remaps: cyan was the old brand colour; now it is the page accent ── */
+.tool-shell .text-cyan-300, .tool-shell .text-cyan-400, .tool-shell .text-cyan-500,
+.tool-shell .hover\:text-cyan-300:hover, .tool-shell .group:hover .group-hover\:text-cyan-400 { color: var(--accent-text) !important; }
+.tool-shell .text-blue-400, .tool-shell .text-blue-500 { color: var(--sky) !important; }
+.tool-shell .text-purple-400 { color: var(--violet-text) !important; }
+.tool-shell .text-green-400, .tool-shell .text-green-500 { color: var(--mint) !important; }
+.tool-shell .text-red-400, .tool-shell .text-red-500 { color: var(--danger) !important; }
+.tool-shell .text-yellow-400 { color: var(--gold) !important; }
+.tool-shell .border-cyan-400, .tool-shell .border-cyan-500, .tool-shell .focus\:border-cyan-400:focus, .tool-shell .focus\:border-cyan-500:focus { border-color: var(--accent) !important; }
+.tool-shell .border-cyan-400\/30, .tool-shell .border-cyan-400\/50, .tool-shell .hover\:border-cyan-500\/50:hover { border-color: color-mix(in srgb, var(--accent) 45%, transparent) !important; }
+.tool-shell .bg-cyan-400\/10, .tool-shell .bg-cyan-400\/5 { background-color: color-mix(in srgb, var(--accent) 13%, transparent) !important; }
+.tool-shell .bg-cyan-400\/20 { background-color: color-mix(in srgb, var(--accent) 22%, transparent) !important; }
+.tool-shell .border-purple-400 { border-color: var(--violet-light) !important; }
+.tool-shell .bg-purple-400\/10 { background-color: rgba(108, 99, 255, 0.16) !important; }
+.tool-shell .bg-cyan-400, .tool-shell .bg-cyan-500, .tool-shell .bg-cyan-600 { background-color: var(--accent) !important; color: var(--navy) !important; }
+.tool-shell .bg-gray-600 { background-color: var(--navy-3) !important; }
+.tool-shell .ring-cyan-400 { --tw-ring-color: var(--accent) !important; }
+
+/* progress bars and pills drawn with gradients → flat accent */
+.tool-shell div.bg-gradient-to-r.h-2, .tool-shell div.bg-gradient-to-r.h-3 { background: var(--accent) !important; }
+.tool-shell span.bg-gradient-to-r { background: var(--accent) !important; color: var(--navy) !important; }
+
+/* ── physical buttons: every gradient CTA becomes a .btn-3d-style key ── */
+.tool-shell button.bg-gradient-to-r,
+.tool-shell a.bg-gradient-to-r,
+.tool-shell button.bg-cyan-600,
+.tool-shell button.bg-cyan-500,
+.tool-shell button.bg-white.text-black {
+  background: var(--accent) !important;
+  color: var(--navy) !important;
+  border: 0 !important;
+  border-bottom: 4px solid var(--accent-dark) !important;
+  border-radius: 12px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+  font-family: var(--font-display);
+  font-weight: 700;
+  transform: none;
+  transition: transform 120ms var(--ease-out), border-bottom-width 120ms var(--ease-out), filter 160ms ease !important;
+}
+.tool-shell button.bg-gradient-to-r *, .tool-shell a.bg-gradient-to-r * { color: inherit !important; }
+.tool-shell button.bg-gradient-to-r:hover:not(:disabled),
+.tool-shell button.bg-cyan-600:hover:not(:disabled) { filter: brightness(1.07); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35) !important; }
+.tool-shell button.bg-gradient-to-r:active:not(:disabled),
+.tool-shell button.bg-cyan-600:active:not(:disabled),
+.tool-shell button.bg-white.text-black:active { transform: translateY(3px) !important; border-bottom-width: 1px !important; }
+.tool-shell button.bg-gradient-to-r:disabled { opacity: 0.5; filter: saturate(0.4); }
+
+/* secondary keys */
+.tool-shell button.bg-gray-700\/80, .tool-shell button.bg-gray-700\/50, .tool-shell button.bg-white\/10, .tool-shell .lab-key {
+  background: var(--navy-3) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--line) !important;
+  border-bottom: 4px solid #121630 !important;
+  border-radius: 12px !important;
+  box-shadow: var(--highlight-top) !important;
+  transition: transform 120ms var(--ease-out), border-bottom-width 120ms var(--ease-out), filter 160ms ease !important;
+}
+.tool-shell button.bg-gray-700\/80:hover:not(:disabled), .tool-shell button.bg-white\/10:hover, .tool-shell .lab-key:hover { filter: brightness(1.15); }
+.tool-shell button.bg-gray-700\/80:active:not(:disabled), .tool-shell button.bg-white\/10:active, .tool-shell .lab-key:active { transform: translateY(3px); border-bottom-width: 1px !important; }
+
+/* option tiles (unselected): readable hover on navy */
+.tool-shell .hover\:border-gray-500:hover { border-color: var(--line-strong) !important; }
+.tool-shell .border-gray-500 { border-color: var(--line-strong) !important; }
+
+/* focus rings stay visible on every control inside tools */
+.tool-shell button:focus-visible, .tool-shell a:focus-visible, .tool-shell input:focus-visible, .tool-shell select:focus-visible, .tool-shell textarea:focus-visible {
+  outline: 2px solid var(--accent-light) !important;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tool-shell *, .tool-shell *::before, .tool-shell *::after { transition-duration: 1ms !important; animation-duration: 1ms !important; animation-iteration-count: 1 !important; }
+  .tool-shell [class*='hover:scale']:hover { transform: none !important; }
+}
+
+/* ServiceSelector cards */
+.tool-shell .lab-service {
+  position: relative;
+  padding: 20px;
+  border-radius: 20px;
+  background: var(--pane);
+  border: 1px solid var(--line);
+  border-bottom: 4px solid var(--navy-deep);
+  box-shadow: var(--highlight-top);
+  transition: border-color 160ms ease, transform 200ms var(--ease-out);
+}
+.tool-shell .lab-service:hover, .tool-shell .lab-service:focus-within, .tool-shell .lab-service.is-selected { border-color: var(--accent); border-bottom-color: var(--accent-dark); }
+@media (prefers-reduced-motion: no-preference) {
+  .tool-shell .lab-service.cursor-pointer:hover { transform: translateY(-2px); }
+}
+.tool-shell .lab-service--compact { padding: 14px 16px; border-bottom-width: 1px; }
+.tool-shell .lab-service__icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 15px;
+  border: 1px solid var(--line);
+  font-size: 1.6rem;
+  line-height: 1;
+}
+.tool-shell .lab-service__icon--sm { width: 40px; height: 40px; border-radius: 12px; font-size: 1.2rem; }
+.tool-shell .lab-quote--padded { max-width: 42rem; }
+
+/* Scraping Dashboard */
+.tool-shell .lab-dashboard { padding: 0; }
+.tool-shell .lab-tile {
+  background: var(--pane);
+  border: 1px solid var(--line);
+  border-bottom: 4px solid var(--navy-deep);
+  border-radius: 18px;
+  box-shadow: var(--highlight-top);
+}
+.tool-shell .lab-dashboard .rounded-xl, .tool-shell .lab-dashboard .rounded-2xl { border-radius: 18px; }
+
+/* AI Chat + English Practice: one chat console */
+.tool-shell .lab-chat {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--pane);
+  border: 1px solid var(--line);
+  border-bottom: 4px solid var(--navy-deep);
+  box-shadow: var(--highlight-top), 0 20px 50px -28px rgba(5, 7, 20, 0.8);
+}
+.tool-shell .lab-chat__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.03);
+}
+.tool-shell .lab-chat__avatar {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  font-size: 1.3rem;
+  background: var(--accent);
+  border-bottom: 3px solid var(--accent-dark);
+}
+.tool-shell .lab-chat__log {
+  height: min(56vh, 560px);
+  min-height: 300px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 18px 14px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--navy-3) transparent;
+}
+@media (min-width: 768px) { .tool-shell .lab-chat__log { padding: 22px 22px; } }
+.tool-shell .lab-chat__me { background: var(--accent); }
+.tool-shell .lab-bubble {
+  padding: 12px 14px;
+  border-radius: 16px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+.tool-shell .lab-bubble--bot {
+  background: var(--pane-2);
+  border: 1px solid var(--line);
+  border-top-left-radius: 4px;
+  color: var(--text);
+}
+.tool-shell .lab-bubble--me {
+  background: var(--accent);
+  color: var(--navy);
+  border-top-right-radius: 4px;
+  font-weight: 500;
+}
+.tool-shell .lab-bubble--me * { color: inherit !important; }
+.tool-shell .lab-chat__input { padding: 12px 14px 14px; border-top: 1px solid var(--line); background: rgba(255, 255, 255, 0.03); }
+.tool-shell input.lab-chat__field {
+  width: 100%;
+  min-height: 52px;
+  padding: 0.8rem 6.5rem 0.8rem 1.1rem;
+  border-radius: 999px;
+  background: var(--navy-deep);
+  border: 1px solid var(--line-strong);
+  color: var(--text);
+  font-size: 1rem;
+}
+.tool-shell input.lab-chat__field::placeholder { color: var(--text-3); }
+.tool-shell input.lab-chat__field:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent); }
+.tool-shell .lab-icon-btn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  color: var(--text-2);
+  transition: background 150ms ease, color 150ms ease, transform 120ms var(--ease-out);
+}
+.tool-shell .lab-icon-btn:hover { background: rgba(255, 255, 255, 0.08); color: var(--text); }
+.tool-shell .lab-icon-btn.is-live { background: var(--danger); color: var(--navy); }
+.tool-shell .lab-icon-btn--send { background: var(--accent); color: var(--navy); box-shadow: inset 0 -3px 0 var(--accent-dark); }
+.tool-shell .lab-icon-btn--send:hover:not(:disabled) { background: var(--accent); color: var(--navy); filter: brightness(1.08); }
+.tool-shell .lab-icon-btn--send:active:not(:disabled) { transform: translateY(2px); }
+.tool-shell .lab-icon-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.tool-shell .lab-chip-btn {
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: var(--text-2);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--line);
+  transition: border-color 150ms ease, color 150ms ease;
+}
+.tool-shell .lab-chip-btn:hover { color: var(--text); border-color: var(--accent); }
+
+/* violet-accented tools (Contact Portal): darker violet keys keep white ink at AA */
+[data-accent='violet'] .tool-shell button.bg-gradient-to-r,
+[data-accent='violet'] .tool-shell a.bg-gradient-to-r,
+[data-accent='violet'] .tool-shell button.bg-cyan-600,
+[data-accent='violet'] .tool-shell button.bg-cyan-500,
+[data-accent='violet'] .tool-shell button.bg-white.text-black,
+[data-accent='violet'] .tool-shell .lab-icon-btn--send {
+  background: var(--violet-dark) !important;
+  color: #fff !important;
+  border-bottom-color: #2f2896 !important;
+}
+[data-accent='violet'] .tool-shell .bg-cyan-400,
+[data-accent='violet'] .tool-shell .bg-cyan-500,
+[data-accent='violet'] .tool-shell span.bg-gradient-to-r,
+[data-accent='violet'] .tool-shell .lab-bubble--me { background-color: var(--violet-dark) !important; color: #fff !important; }
+
+/* simulator step indicators: wrap instead of widening the page on phones */
+.tool-shell .lab-steps { flex-wrap: wrap; justify-content: center; row-gap: 10px; max-width: 100%; }
+@media (max-width: 767px) {
+  .tool-shell .lab-steps > div > span { display: none; }
+  .tool-shell .lab-steps > div > div[class*='w-8 h-0.5'], .tool-shell .lab-steps > div > div[class*='w-8 h-0'] { width: 18px; margin-left: 6px; margin-right: 6px; display: block; }
+}
+/* safety net: nothing inside a tool may push the page sideways */
+.lab-flow, .tool-shell { max-width: 100%; overflow-x: clip; }
