@@ -95,8 +95,8 @@
 .sr-cover--contain { object-fit: contain; padding: 8%; }
 
 /* ───────────── gallery card ───────────── */
-.sr-card { display: flex; }
-.sr-card__link { display: flex; flex-direction: column; width: 100%; color: inherit; text-decoration: none; border-radius: inherit; }
+.sr-card { display: flex; flex-direction: column; }
+.sr-card__link { display: flex; flex: 1; flex-direction: column; width: 100%; color: inherit; text-decoration: none; border-radius: inherit; }
 .sr-card__link:focus-visible { outline-offset: -3px; }
 .sr-card__media {
   position: relative;
@@ -804,3 +804,16 @@
   box-shadow: var(--highlight-top);
 }
 .cs-hero--ph .sr-ph__svg { width: min(46%, 300px); }
+
+/* live link: a real button below the card (outside the card link) */
+.sr-card__actions { padding: 0 1rem 1rem; }
+@media (min-width: 640px) { .sr-card__actions { padding: 0 1.25rem 1.25rem; } }
+.sr-card__visit { --btn-face: var(--violet-dark); --btn-edge: #2f2a8f; --btn-ink: #fff; width: 100%; justify-content: flex-start; }
+.sr-card__host { margin-left: auto; font-family: var(--font-mono); font-size: 0.68rem; font-weight: 500; opacity: 0.8; max-width: 55%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sr-card__live {
+  position: absolute; left: 10px; bottom: 10px; z-index: 2;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 3px 9px; border-radius: 999px;
+  background: rgba(15, 18, 40, 0.88); color: var(--mint); font-size: 0.62rem;
+}
+.sr-card__live-dot { width: 7px; height: 7px; border-radius: 99px; background: var(--mint); box-shadow: 0 0 0 3px rgba(121, 216, 160, 0.25); }

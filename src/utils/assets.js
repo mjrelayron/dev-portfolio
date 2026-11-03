@@ -96,6 +96,25 @@ import projectCartelImg from '/src/assets/webp/Project CARTEL.webp'
 import macroCoachImg from '/src/assets/webp/MacroCoach.webp'
 import tasktifyImg from '/src/assets/webp/tasktify.webp'
 
+// Live-site screenshots (captured from each deployment)
+import liveVirtualStewards from '/src/assets/live/virtual-stewards.webp'
+import liveMixMatchClick from '/src/assets/live/mix-match-click.webp'
+import liveRageHub from '/src/assets/live/rage-hub-v2.webp'
+import liveSuppliesPos from '/src/assets/live/supplies-pos.webp'
+import liveLodstech from '/src/assets/live/lodstech.webp'
+import liveNw2apts from '/src/assets/live/nw2apts.webp'
+import liveVsAcademy from '/src/assets/live/virtual-stewards-academy.webp'
+
+export const liveAssets = {
+  virtualStewards: liveVirtualStewards,
+  mixMatchClick: liveMixMatchClick,
+  rageHub: liveRageHub,
+  suppliesPos: liveSuppliesPos,
+  lodstech: liveLodstech,
+  nw2apts: liveNw2apts,
+  vsAcademy: liveVsAcademy,
+}
+
 // Export asset objects for easy access
 export const projectAssets = {
   armet: {

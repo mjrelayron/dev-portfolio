@@ -1,4 +1,4 @@
-import { projectAssets, websiteAssets, socialMediaAssets, placeholderAssets } from '../utils/assets';
+import { projectAssets, websiteAssets, socialMediaAssets, placeholderAssets, liveAssets } from '../utils/assets';
 
 const buildLinks = ({ live, github, demo, caseStudy }) => ({
   live: live ?? null,
@@ -211,12 +211,12 @@ export const featuredProjects = [
       gallery: projectAssets.rage.images,
     },
     image: projectAssets.rage.main,
-    gallery: projectAssets.rage.images,
+    gallery: [...projectAssets.rage.images, liveAssets.rageHub],
     video: projectAssets.rage.video,
     links: buildLinks({
-      live: 'https://rage-fitness-gym.vercel.app/',
+      live: 'https://rage-fitness-gym.vercel.app/v2/',
     }),
-    url: 'https://rage-fitness-gym.vercel.app/',
+    url: 'https://rage-fitness-gym.vercel.app/v2/',
   },
   {
     id: 'urbancare',
@@ -625,6 +625,178 @@ export const featuredProjects = [
 ];
 
 export const otherProjects = [
+  {
+    id: 'mix-match-click',
+    featured: true,
+    slug: 'mix-match-click',
+    title: "Mix & Match & Click",
+    subtitle: "VA Community, Agency & Productivity Platform",
+    summary: "A professional community for virtual assistants and the clients who hire them, with agency-screened VAs, transparent onboarding and privacy-first productivity tracking.",
+    overview:
+      "Mix & Match & Click combines a community for virtual assistants with an agency that screens, matches and supports every hire. Phase 1 covers the public website, accounts, profiles, a feed, connections, VA applications and admin moderation.",
+    year: 2026,
+    status: "Live",
+    category: "Marketplace",
+    technologies: ["Next.js","React","TypeScript","Supabase","Tailwind CSS","Three.js"],
+    features: [
+      "Accounts and VA profiles",
+      "Community feed and connections",
+      "VA applications",
+      "Admin moderation",
+      "Agency-verified VAs"
+    ],
+    metrics: [],
+    color: '#6C63FF',
+    image: liveAssets.mixMatchClick,
+    gallery: [liveAssets.mixMatchClick],
+    links: buildLinks({
+      live: 'https://mix-match-click.vercel.app/',
+    }),
+    url: 'https://mix-match-click.vercel.app/',
+  },
+  {
+    id: 'supplies-pos',
+    featured: true,
+    slug: 'supplies-pos',
+    title: "Lapis & Papel · Supplies POS",
+    subtitle: "POS, Invoicing, Inventory & Online Shop",
+    summary: "Point of sale, invoicing and inventory for a school and office supplies store that sells retail, wholesale and to schools and government offices, plus an online shop for school kits.",
+    overview:
+      "Supplies POS runs the store side (point of sale, invoicing, inventory) and a customer shop where parents pick their school and grade, order the official supply list as a kit, and pay at pickup with cash or GCash. This is the client demo build.",
+    year: 2026,
+    status: "Client demo",
+    category: "E-commerce",
+    technologies: ["Next.js","React","TypeScript","Prisma","SQLite","Zod"],
+    features: [
+      "Point of sale",
+      "Invoicing",
+      "Inventory",
+      "Retail and wholesale pricing",
+      "School kits by school and grade",
+      "Order online, pay at pickup (cash or GCash)"
+    ],
+    metrics: [],
+    color: '#FFAD5A',
+    image: liveAssets.suppliesPos,
+    gallery: [liveAssets.suppliesPos],
+    links: buildLinks({
+      live: 'https://supplies-pos.vercel.app/shop',
+    }),
+    url: 'https://supplies-pos.vercel.app/shop',
+  },
+  {
+    id: 'virtual-stewards-academy',
+    featured: true,
+    slug: 'virtual-stewards-academy',
+    title: "VirtualStewards Academy",
+    subtitle: "Virtual Assistant Training Platform",
+    summary: "Practical training, real tools, AI-powered practice and a clearer career path for virtual assistants.",
+    overview:
+      "VirtualStewards Academy is a learning platform for aspiring virtual assistants: free courses to start, practice tools, AI simulations of real scenarios, career tracks and a verified WorkProof profile.",
+    year: 2026,
+    status: "Live",
+    category: "Web Development",
+    technologies: ["Next.js","React","TypeScript","Supabase","Tailwind CSS"],
+    features: [
+      "Free courses",
+      "Practice tools",
+      "AI simulations",
+      "Career tracks",
+      "WorkProof verified profile"
+    ],
+    metrics: [],
+    color: '#79D8A0',
+    image: liveAssets.vsAcademy,
+    gallery: [liveAssets.vsAcademy],
+    links: buildLinks({
+      live: 'https://virtual-stewards-academy.vercel.app/',
+    }),
+    url: 'https://virtual-stewards-academy.vercel.app/',
+  },
+  {
+    id: 'virtual-stewards',
+    featured: false,
+    slug: 'virtual-stewards',
+    title: "Virtual Stewards",
+    subtitle: "Specialized VA Staffing (BrandSolutions)",
+    summary: "Trains and deploys specialized virtual assistants for Medical Administration, Rental & Property Management and Client Success operations.",
+    overview:
+      "The staffing site for BrandSolutions: three specialized VA tracks, skills-verified assistants and a request-a-VA flow, explaining how VAs are trained, assessed and matched to real operational workflows.",
+    year: 2026,
+    status: "Live",
+    category: "Web Development",
+    technologies: ["Next.js","React","TypeScript"],
+    features: [
+      "Three specialized VA tracks",
+      "How-it-works and VA profiles",
+      "Request-a-VA flow"
+    ],
+    metrics: [],
+    color: '#42BDF5',
+    image: liveAssets.virtualStewards,
+    gallery: [liveAssets.virtualStewards],
+    links: buildLinks({
+      live: 'https://virtual-stewards.vercel.app/',
+    }),
+    url: 'https://virtual-stewards.vercel.app/',
+  },
+  {
+    id: 'lodstech-io',
+    featured: false,
+    slug: 'lodstech-io',
+    title: "LODStech.io",
+    subtitle: "Studio Site with a Live Showroom",
+    summary: "The studio site for LODStech.io, which designs and builds websites, web apps and internal tools. Every portfolio project runs live, right on the page.",
+    overview:
+      "LODStech.io presents its work as a showroom you can use: client projects and concept builds run inside the page, so visitors can log in and click through them like a customer would.",
+    year: 2026,
+    status: "Live",
+    category: "Web Design",
+    technologies: ["Next.js","React","TypeScript","React Three Fiber","Three.js"],
+    features: [
+      "Live, in-page project showroom",
+      "Client work and concept builds",
+      "Services, process and team"
+    ],
+    metrics: [],
+    color: '#9A94FF',
+    image: liveAssets.lodstech,
+    gallery: [liveAssets.lodstech],
+    links: buildLinks({
+      live: 'https://lodstech-io.vercel.app/',
+    }),
+    url: 'https://lodstech-io.vercel.app/',
+  },
+  {
+    id: 'nw2apts',
+    featured: false,
+    slug: 'nw2apts',
+    title: "Northwood II Apartments",
+    subtitle: "Apartment Community Website",
+    summary: "Website for Northwood II, a 104-unit apartment community in Shreveport, Louisiana, under new ownership and being fully rebuilt.",
+    overview:
+      "The site tells the rebuild story and helps people move in: floor plans and pricing, safety, a gallery, resident links and a tour request, for a community with lease terms from $725/month.",
+    year: 2026,
+    status: "Live",
+    category: "Web Design",
+    technologies: ["HTML","CSS","JavaScript"],
+    features: [
+      "Floor plans and pricing",
+      "Rebuild progress",
+      "Safety information",
+      "Gallery",
+      "Resident portal link",
+      "Tour scheduling"
+    ],
+    metrics: [],
+    color: '#FFAD5A',
+    image: liveAssets.nw2apts,
+    gallery: [liveAssets.nw2apts],
+    links: buildLinks({
+      live: 'https://nw2apts.vercel.app/',
+    }),
+    url: 'https://nw2apts.vercel.app/',
+  },
   {
     id: 'accc-medops',
     featured: true,

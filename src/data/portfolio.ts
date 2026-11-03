@@ -77,8 +77,10 @@ function toProject(p: Raw): Project {
 
 export const projects: Project[] = [...featuredProjects, ...otherProjects].map(toProject);
 
-// featured first, then newest
-export const sortedProjects = [...projects].sort((a, b) => Number(b.featured) - Number(a.featured) || (b.year ?? 0) - (a.year ?? 0));
+// projects you can open come first, then newest, then featured
+export const sortedProjects = [...projects].sort(
+  (a, b) => Number(!!b.liveUrl) - Number(!!a.liveUrl) || (b.year ?? 0) - (a.year ?? 0) || Number(b.featured) - Number(a.featured),
+);
 
 export const projectBySlug: Record<string, Project> = Object.fromEntries(projects.map((p) => [p.slug, p]));
 

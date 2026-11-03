@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, Eye, Star } from 'lucide-react';
+import { ArrowUpRight, ExternalLink, Eye, Star } from 'lucide-react';
 import { TiltCard } from '../components/ui/Card';
 import type { Project } from '../data/portfolio';
 import { CoverImage } from './covers';
 import './showroom.css';
+
+const isExternal = (u: string) => /^https?:\/\//.test(u);
+const hostOf = (u: string) => u.replace(/^https?:\/\//, '').replace(/\/$/, '');
 
 export function ProjectCard({ project, eager = false, onQuickLook }: { project: Project; eager?: boolean; onQuickLook?: (p: Project) => void }) {
   const extra = project.tech.length - 3;
@@ -12,6 +15,11 @@ export function ProjectCard({ project, eager = false, onQuickLook }: { project: 
       <Link to={`/projects/${project.slug}`} className="sr-card__link">
         <div className="sr-card__media">
           <CoverImage project={project} eager={eager} alt="" className="sr-card__img" />
+          {project.liveUrl && (
+            <span className="sr-card__live mono-label">
+              <span className="sr-card__live-dot" aria-hidden /> Live
+            </span>
+          )}
           {project.featured && (
             <span className="sr-card__badge mono-label">
               <Star size={11} aria-hidden fill="currentColor" /> Featured
@@ -49,6 +57,20 @@ export function ProjectCard({ project, eager = false, onQuickLook }: { project: 
           )}
         </div>
       </Link>
+      {project.liveUrl && (
+        <div className="sr-card__actions">
+          {isExternal(project.liveUrl) ? (
+            <a href={project.liveUrl} target="_blank" rel="noreferrer noopener" className="btn-3d btn-3d--sm sr-card__visit" aria-label={`Visit ${project.title} live (opens in a new tab)`}>
+              <ExternalLink size={14} aria-hidden /> Visit live site
+              <span className="sr-card__host">{hostOf(project.liveUrl)}</span>
+            </a>
+          ) : (
+            <Link to={project.liveUrl} className="btn-3d btn-3d--sm sr-card__visit">
+              <ExternalLink size={14} aria-hidden /> Open it here
+            </Link>
+          )}
+        </div>
+      )}
       {onQuickLook && (
         <button type="button" className="sr-card__quick" onClick={() => onQuickLook(project)} aria-label={`Quick look: ${project.title}`}>
           <Eye size={14} aria-hidden /> Quick look

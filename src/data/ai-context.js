@@ -36,6 +36,13 @@ PROJECTS:
 8. Femme: Trendy Women's Fashion Boutique (WordPress/WooCommerce).
 9. Gents: Premium Men's Apparel Shop (WordPress/WooCommerce).
 10. Plush: Luxury Lifestyle & Accessories Brand (WordPress).
+12. Mix & Match & Click (https://mix-match-click.vercel.app/): VA community, agency and productivity platform (Next.js/Supabase).
+13. Lapis & Papel Supplies POS (https://supplies-pos.vercel.app/shop): POS, invoicing, inventory and online school-kit shop (Next.js/Prisma).
+14. VirtualStewards Academy (https://virtual-stewards-academy.vercel.app/): VA training platform with courses, AI simulations and career tracks (Next.js/Supabase).
+15. Virtual Stewards (https://virtual-stewards.vercel.app/): specialized VA staffing site for BrandSolutions (Next.js).
+16. LODStech.io (https://lodstech-io.vercel.app/): studio site with a live, in-page project showroom (Next.js/React Three Fiber).
+17. Northwood II Apartments (https://nw2apts.vercel.app/): website for a 104-unit apartment community in Shreveport, LA.
+18. Rage Fitness Gym management app: https://rage-fitness-gym.vercel.app/v2/
 11. MedOps: Internal patient operations app built for ACCC (American Critical Care Consult) while working there as Patient Coordinator, Jan–Aug 2026 (Next.js/TypeScript/Supabase).
 
 CONTACT:

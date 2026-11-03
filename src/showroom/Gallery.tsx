@@ -49,7 +49,7 @@ export function Gallery() {
       </div>
       <p className="mono-label mb-4 mt-5 text-ink-3" aria-live="polite">
         {results.length === sortedProjects.length
-          ? `${results.length} projects · featured first`
+          ? `${results.length} projects · live sites first`
           : `${results.length} of ${sortedProjects.length} projects`}
       </p>
 
