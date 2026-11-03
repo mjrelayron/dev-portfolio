@@ -3,7 +3,7 @@
 // Starts the "Scrape videos" GitHub Action (workflow_dispatch).
 //
 // env: GITHUB_TOKEN — fine-grained token for this repo with "Actions: read and write".
-//      GITHUB_REPO (optional, default mjrelayron/dev-portfolio), GITHUB_REF (optional, default main)
+//      GITHUB_REPO (optional, default mjrelayron/developerverse), GITHUB_REF (optional, default main)
 // A 30-minute cooldown keeps visitors from burning the YouTube API quota.
 
 const WORKFLOW = 'scrape-videos.yml';
@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const token = process.env.GITHUB_TOKEN;
-  const repo = process.env.GITHUB_REPO || 'mjrelayron/dev-portfolio';
+  const repo = process.env.GITHUB_REPO || 'mjrelayron/developerverse';
   const ref = process.env.GITHUB_REF || 'main';
   if (!token) return res.status(503).json({ error: 'not_configured', message: 'Manual runs are not switched on yet. The scraper still runs every night.' });
 

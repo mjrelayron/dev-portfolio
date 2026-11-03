@@ -31,7 +31,7 @@ interface Run {
   url?: string | null;
 }
 
-const REPO_ACTIONS = 'https://github.com/mjrelayron/dev-portfolio/actions/workflows/scrape-videos.yml';
+const REPO_ACTIONS = 'https://github.com/mjrelayron/developerverse/actions/workflows/scrape-videos.yml';
 const nf = new Intl.NumberFormat('en');
 const LABELS: Record<string, string> = { n8n: 'n8n', zapier: 'Zapier', beginner: 'Beginner', intermediate: 'Intermediate', advanced: 'Advanced' };
 const ago = (iso: string) => {
