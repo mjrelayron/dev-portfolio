@@ -193,7 +193,11 @@ You are here to help visitors understand Melvin, his work, and what he brings to
 
         if (!apiResponse.ok) {
             const errorText = await apiResponse.text();
-            throw new Error(`Gemini API Error: ${apiResponse.status} - ${errorText}`);
+            let googleStatus = 'ERROR';
+            try { googleStatus = JSON.parse(errorText)?.error?.status || googleStatus; } catch { /* not JSON */ }
+            const err = new Error(`Gemini API Error: ${apiResponse.status} - ${errorText}`);
+            err.code = `gemini_${apiResponse.status}_${googleStatus}`;
+            throw err;
         }
 
         const data = await apiResponse.json();
@@ -203,6 +207,8 @@ You are here to help visitors understand Melvin, his work, and what he brings to
     } catch (error) {
         // full details stay in the server logs; the browser gets a plain message
         console.error('Chat Error:', error);
-        res.status(500).json({ error: 'Failed to generate response', details: 'The assistant is unavailable right now. Please try again in a moment.' });
+        // `code` is a short, non-sensitive reason (e.g. gemini_402_RESOURCE_EXHAUSTED, missing_key)
+        const code = error.code || (/GEMINI_API_KEY is missing/.test(error.message) ? 'missing_key' : 'server_error');
+        res.status(500).json({ error: 'Failed to generate response', code, details: 'The assistant is unavailable right now. Please try again in a moment.' });
     }
 }
