@@ -82,6 +82,8 @@ test('hub buildings are real links', async ({ page }) => {
 
 test('clicking a building enters the destination', async ({ page, isMobile }) => {
   await page.goto('/world');
+  // wait for the app to take over the prerendered map before clicking
+  await page.waitForLoadState('networkidle');
   const b = page.locator('a.bld[href="/projects"]');
   await b.click({ force: true });
   if (isMobile) await b.click({ force: true }); // first tap only shows the label
@@ -128,4 +130,37 @@ test('prerendered HTML has per-route SEO tags', async ({ request }) => {
   expect(html).toContain('"@type":"CreativeWork"');
   const home = await (await request.get('/')).text();
   expect(home).toContain('"@type":"Person"');
+});
+
+test('terminal commands produce output', async ({ page, isMobile }) => {
+  test.skip(!!isMobile, 'the desktop OS opens the terminal automatically');
+  await page.goto('/os');
+  await page.waitForLoadState('networkidle');
+  const input = page.getByRole('textbox', { name: 'Terminal command' });
+  const log = page.getByRole('log', { name: 'Terminal output' });
+  await input.fill('help');
+  await input.press('Enter');
+  await expect(log).toContainText('projects');
+  await input.fill('whoami');
+  await input.press('Enter');
+  await expect(log).toContainText('Elayron');
+  await input.fill('projects');
+  await input.press('Enter');
+  await expect(log).toContainText('guro-ai');
+});
+
+test('contact form validates, then sends (EmailJS mocked)', async ({ page }) => {
+  await page.goto('/contact');
+  await page.waitForLoadState('networkidle');
+  const send = page.getByRole('button', { name: /send message/i });
+  await send.click();
+  await expect(page.locator('#contact-name')).toHaveAttribute('aria-invalid', 'true');
+  await expect(page.locator('#contact-name')).toBeFocused();
+  await page.locator('#contact-name').fill('Test Visitor');
+  await page.locator('#contact-email').fill('visitor@example.com');
+  await page.locator('#contact-subject').fill('Smoke test');
+  await page.locator('#contact-message').fill('This is an automated test message. It never leaves the browser.');
+  await send.click();
+  await expect(page.getByRole('heading', { name: 'Message sent successfully!' })).toBeVisible({ timeout: 10000 });
+  await expect(page.getByText('Message sent', { exact: true })).toBeVisible(); // toast
 });
