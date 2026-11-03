@@ -104,7 +104,7 @@ import liveSuppliesPos from '/src/assets/live/supplies-pos.webp'
 import liveLodstech from '/src/assets/live/lodstech.webp'
 import liveNw2apts from '/src/assets/live/nw2apts.webp'
 import liveVsAcademy from '/src/assets/live/virtual-stewards-academy.webp'
-// MedOps Command Center (patient names/visit types blurred)
+// MedOps Command Center (demo data)
 import liveMedops from '/src/assets/live/accc-medops.webp'
 
 export const liveAssets = {
