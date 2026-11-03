@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { gsap } from 'gsap';
+import { loadGsap } from './gsap';
 import { DevBot } from '../mascot/DevBot';
 import { prefersReducedMotion } from '../hooks/useReducedMotion';
 import { playSound } from '../hooks/useSound';
@@ -19,13 +19,26 @@ export function Intro({ onDone }: { onDone: () => void }) {
     if (done.current) return;
     done.current = true;
     const world = document.querySelector<HTMLElement>('.world-layer');
-    if (world) gsap.set(world, { clearProps: 'transform,opacity' });
+    if (world) {
+      world.style.transform = '';
+      world.style.opacity = '';
+    }
     onDone();
   };
 
   useEffect(() => {
     const el = root.current;
     if (!el) return;
+    let kill = () => {};
+    loadGsap().then((gsap) => {
+      if (done.current) return;
+      kill = play(gsap, el);
+    });
+    return () => kill();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function play(gsap: typeof import('gsap').gsap, el: HTMLDivElement) {
     const world = document.querySelector<HTMLElement>('.world-layer');
 
     if (prefersReducedMotion()) {
@@ -60,8 +73,7 @@ export function Intro({ onDone }: { onDone: () => void }) {
     return () => {
       tl.kill();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }
 
   const word = 'DEVELOPERVERSE';
   return (

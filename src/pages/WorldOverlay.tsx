@@ -7,7 +7,7 @@ import { useSettings } from '../store/useSettings';
 import { ClientOnly } from '../components/ui/ClientOnly';
 
 /** The text layer over the hub map: who this is, and the two main ways in. */
-export function WorldOverlay({ path }: { path: string }) {
+export function WorldOverlay({ path, hidden }: { path: string; hidden?: boolean }) {
   const replay = useSettings((s) => s.replayIntro);
   const seen = useSettings((s) => s.introSeen);
   return (
@@ -18,7 +18,7 @@ export function WorldOverlay({ path }: { path: string }) {
         path={path}
         jsonLd={personJsonLd}
       />
-      <section className="world-card pointer-events-none fixed left-3 right-3 top-[calc(var(--hud-top)+4px)] z-20 sm:left-6 sm:right-auto lg:top-[calc(var(--hud-top)+18px)]">
+      <section aria-hidden={hidden || undefined} className={`world-card ${hidden ? 'is-hidden' : ''} pointer-events-none fixed left-3 right-3 top-[calc(var(--hud-top)+4px)] z-20 sm:left-6 sm:right-auto lg:top-[calc(var(--hud-top)+18px)]`}>
         <div className="panel pointer-events-auto max-w-[25rem] p-4 sm:p-5">
           <p className="mono-label text-[var(--orange)]">Welcome to the verse</p>
           <h1 className="mt-1.5 text-[1.45rem] font-bold sm:text-[1.7rem]">

@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { gsap } from 'gsap';
+import { loadGsap } from './gsap';
 import { destinations, accentVar, type Destination } from '../data/destinations';
-import { featuredProjects } from '../data/projects.js';
+import { projectAssets } from '../utils/assets.js';
 import { EXPERIENCE_DATA } from '../data/experience.js';
 import { Island, Cloud, Tree, Rock } from './parts';
 import { CentralPlaza, ProjectDistrict, SkillAcademy, ExperienceTower, ExperimentLab, ContactPortal } from './buildings';
@@ -81,7 +81,7 @@ export function HubMap({ focus, interactive }: { focus: DestId | null; interacti
   const rootRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const vb = useRef<VB>({ ...CONTENT });
-  const tween = useRef<gsap.core.Tween | null>(null);
+  const tween = useRef<{ kill: () => void } | null>(null);
   const navigate = useNavigate();
   const desktop = useIsDesktop();
   const canHover = useCanHover();
@@ -92,7 +92,8 @@ export function HubMap({ focus, interactive }: { focus: DestId | null; interacti
   const [entering, setEntering] = useState<DestId | null>(null);
   const activeFocus = entering ?? focus;
 
-  const covers = useMemo(() => featuredProjects.map((p: { image: string }) => p.image).filter(Boolean), []);
+  // featured covers for the Project District's big screen
+  const covers = useMemo(() => [projectAssets.guro.main, projectAssets.skillFoundri.main, projectAssets.fitSync.main, projectAssets.docuMind.main], []);
 
   const apply = useCallback((b: VB) => {
     vb.current = b;
@@ -121,7 +122,8 @@ export function HubMap({ focus, interactive }: { focus: DestId | null; interacti
         return Promise.resolve();
       }
       const from = { ...vb.current };
-      return new Promise<void>((resolve) => {
+      return loadGsap().then((gsap) => new Promise<void>((resolve) => {
+        tween.current?.kill();
         tween.current = gsap.to(from, {
           ...to,
           duration,
@@ -129,7 +131,7 @@ export function HubMap({ focus, interactive }: { focus: DestId | null; interacti
           onUpdate: () => apply(from),
           onComplete: resolve,
         });
-      });
+      }));
     },
     [apply, reduced, target],
   );

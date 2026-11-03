@@ -14,8 +14,9 @@ let ok = 0;
 for (const url of paths) {
   try {
     const { html, seo } = await render(url);
-    const head = seo ? headTags(seo) : '';
-    const page = template.replace(/<!--seo-->[\s\S]*?<!--\/seo-->/, head).replace('<!--app-->', html);
+    if (!seo) console.warn('⚠ no <Seo> on ' + url + ' — keeping default head');
+    const withHead = seo ? template.replace(/<!--seo-->[\s\S]*?<!--\/seo-->/, headTags(seo)) : template;
+    const page = withHead.replace('<!--app-->', html);
     // /projects -> dist/projects.html (vercel cleanUrls serves it at /projects)
     const file = url === '/' ? path.join(dist, 'index.html') : path.join(dist, `${url.slice(1)}.html`);
     fs.mkdirSync(path.dirname(file), { recursive: true });

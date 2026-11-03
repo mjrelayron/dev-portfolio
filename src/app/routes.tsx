@@ -1,5 +1,4 @@
 import { lazy } from 'react';
-import { featuredProjects, otherProjects } from '../data/projects.js';
 
 // Every page is its own chunk. The prerenderer waits for these to resolve.
 export const pages = {
@@ -30,26 +29,6 @@ export const legacyRedirects: Record<string, string> = {
 
 export const labTools = ['simulators', 'scraping-dashboard', 'chat', 'practice'] as const;
 export const arcadeGames = ['stack-builder', 'bug-hunter', 'project-explorer', 'workflow-challenger'] as const;
-
-/** Routes that get a static HTML snapshot at build time (SEO). */
-export function prerenderPaths(): string[] {
-  const slugs = [...featuredProjects, ...otherProjects].map((p: { slug: string }) => p.slug);
-  return [
-    '/',
-    '/world',
-    '/projects',
-    ...slugs.map((s) => `/projects/${s}`),
-    '/skills',
-    '/experience',
-    '/lab',
-    '/about',
-    '/contact',
-    '/resume',
-    '/os',
-    '/arcade',
-    '/classic',
-  ];
-}
 
 export type LayoutMode = 'world' | 'destination' | 'plain' | 'os';
 

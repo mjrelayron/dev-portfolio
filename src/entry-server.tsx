@@ -22,4 +22,4 @@ export async function render(url: string): Promise<{ html: string; seo: SeoData 
 }
 
 export { headTags } from './app/Seo';
-export { prerenderPaths } from './app/routes';
+export { prerenderPaths } from './app/prerenderPaths';

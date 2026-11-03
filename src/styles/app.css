@@ -389,3 +389,8 @@ main:focus { outline: none; }
   letter-spacing: 0.14em;
   font-size: clamp(1.6rem, 6vw, 3.6rem);
 }
+
+.world-card { transition: opacity 500ms var(--ease-out), transform 600ms var(--ease-spring); }
+.world-card.is-hidden { opacity: 0; transform: translateY(-12px); visibility: hidden; }
+.intro-title .intro-word { text-shadow: 0 2px 0 #0f1228, 0 0 30px rgba(15, 18, 40, 0.9); }
+.intro-tag { text-shadow: 0 0 12px rgba(15, 18, 40, 1); }
