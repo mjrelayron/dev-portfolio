@@ -1,5 +1,7 @@
 // Screenshot routes at 390 / 768 / 1440 px against `vite preview`.
 // usage: node scripts/screenshots.mjs <outDir> [route ...]
+// env: SHOT_PORT (default 4179), SHOT_MODE=dev to use the Vite dev server instead
+//      of `vite preview` (no build needed; safe to run several in parallel on different ports)
 import { spawn } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -8,11 +10,12 @@ import { chromium } from '@playwright/test';
 const [outDir = 'docs/screenshots/tmp', ...routesArg] = process.argv.slice(2);
 const routes = routesArg.length ? routesArg : ['/world', '/projects', '/about', '/classic', '/404-test'];
 const widths = [390, 768, 1440];
-const PORT = 4179;
+const PORT = Number(process.env.SHOT_PORT ?? 4179);
+const MODE = process.env.SHOT_MODE === 'dev' ? 'dev' : 'preview';
 
-const server = spawn(process.execPath, ['node_modules/vite/bin/vite.js', 'preview', '--port', String(PORT), '--strictPort'], { stdio: 'pipe' });
+const server = spawn(process.execPath, ['node_modules/vite/bin/vite.js', ...(MODE === 'dev' ? [] : ['preview']), '--port', String(PORT), '--strictPort'], { stdio: 'pipe' });
 await new Promise((resolve, reject) => {
-  const t = setTimeout(() => reject(new Error('preview did not start')), 30000);
+  const t = setTimeout(() => reject(new Error('server did not start')), 60000);
   server.stdout.on('data', (d) => d.toString().includes(String(PORT)) && (clearTimeout(t), resolve()));
 });
 
@@ -31,7 +34,7 @@ try {
     page.on('pageerror', (e) => errors.push(`[${w}] ${page.url()}: ${e.message}`));
     for (const r of routes) {
       await page.goto(`http://localhost:${PORT}${r}`, { waitUntil: 'networkidle' });
-      await page.waitForTimeout(1300);
+      await page.waitForTimeout(MODE === 'dev' ? 2500 : 1300);
       const name = `${(r.replace(/\//g, '_').replace(/^_/, '') || 'home')}-${w}.png`;
       await page.screenshot({ path: path.join(outDir, name) });
     }
