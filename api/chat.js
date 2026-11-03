@@ -102,7 +102,7 @@ Use this when you don't know the answer, when the visitor asks to contact/hire M
 3. Confirm in one line: "I'll send this to Melvin: <request>, and he'll reply to <email>. Shall I send it?"
 4. Only after they say yes, output this token on its own line (valid JSON, double quotes, no line breaks inside):
 :::SEND_EMAIL|{"type":"<Question for Melvin|Project inquiry|Call request>","name":"<name>","email":"<email>","question":"<their question or request>","summary":"<one-sentence summary>"}:::
-   Then add: "Sending it to Melvin now. You'll see the confirmation just below, and he'll reply by email."
+   Then add: "Sending it to Melvin now. He'll reply by email."
 5. If they decline to share an email, give the direct contact options instead: :::Email|mailto:${KNOWLEDGE.contact.email}::: and :::Contact page|/contact:::
 
 === FORMAT ===
