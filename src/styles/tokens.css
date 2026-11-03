@@ -1,0 +1,66 @@
+/* DEVELOPERVERSE design tokens.
+   Each destination accent is its identity everywhere: building, dock chip,
+   page header and transition wipe. -light / -dark are the isometric faces. */
+:root {
+  --navy: #171b35;
+  --navy-2: #222850;
+  --navy-3: #2c3366;
+  --navy-deep: #0f1228;
+  --line: rgba(255, 255, 255, 0.12);
+  --line-strong: rgba(255, 255, 255, 0.22);
+
+  --violet: #6c63ff;
+  --violet-light: #9a94ff;
+  --violet-dark: #4a42c7;
+  --violet-text: #a9a4ff; /* AA on navy */
+
+  --sky: #42bdf5;
+  --sky-light: #85d6fa;
+  --sky-dark: #2289b8;
+
+  --orange: #ffad5a;
+  --orange-light: #ffc994;
+  --orange-dark: #d9823a;
+
+  --mint: #79d8a0;
+  --mint-light: #a9e7c2;
+  --mint-dark: #4aa874;
+
+  --white: #ffffff;
+  --white-dark: #c9ccec;
+
+  --text: #ffffff;
+  --text-2: #c4c8e8; /* 9.5:1 on navy */
+  --text-3: #959bc7; /* 5.4:1 on navy */
+
+  --gold: #ffcf6b;
+  --danger: #ff7a8a;
+
+  --font-display: 'Space Grotesk Variable', 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Inter Variable', 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, monospace;
+
+  --radius-sm: 10px;
+  --radius: 16px;
+  --radius-lg: 20px;
+
+  --shadow-panel: 0 20px 50px -20px rgba(5, 7, 20, 0.7);
+  --highlight-top: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* current destination accent (set per page) */
+  --accent: var(--violet);
+  --accent-light: var(--violet-light);
+  --accent-dark: var(--violet-dark);
+
+  --hud-top: 64px;
+  --hud-dock: 84px;
+}
+
+[data-accent='violet'] { --accent: var(--violet); --accent-light: var(--violet-light); --accent-dark: var(--violet-dark); --accent-text: var(--violet-text); }
+[data-accent='sky'] { --accent: var(--sky); --accent-light: var(--sky-light); --accent-dark: var(--sky-dark); --accent-text: var(--sky); }
+[data-accent='orange'] { --accent: var(--orange); --accent-light: var(--orange-light); --accent-dark: var(--orange-dark); --accent-text: var(--orange); }
+[data-accent='mint'] { --accent: var(--mint); --accent-light: var(--mint-light); --accent-dark: var(--mint-dark); --accent-text: var(--mint); }
+[data-accent='white'] { --accent: var(--white); --accent-light: var(--white); --accent-dark: var(--white-dark); --accent-text: var(--white); }

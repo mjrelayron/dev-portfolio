@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npx vite build",
+    "build": "vite build && vite build --ssr src/entry-server.tsx --outDir dist-ssr && node scripts/prerender.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
     "convert-images": "node scripts/convert-images.mjs",
@@ -19,22 +19,28 @@
     "youtube:server": "node scripts/api-key-server.js",
     "youtube:start": "bash scripts/start-automation.sh",
     "youtube:start:win": "scripts/start-automation.bat",
-    "dev:api": "node --env-file=.env scripts/api-server.js"
+    "dev:api": "node --env-file=.env scripts/api-server.js",
+    "build:client": "vite build",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test:e2e": "playwright test",
+    "screenshots": "node scripts/screenshots.mjs"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.1",
+    "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@fontsource-variable/space-grotesk": "^5.3.0",
     "@google/generative-ai": "^0.24.1",
     "@headlessui/react": "^2.2.9",
-    "@mui/icons-material": "^7.3.2",
-    "@mui/lab": "^7.0.0-beta.17",
-    "@mui/material": "^7.3.2",
+    "@rive-app/react-canvas": "^4.38.0",
     "@vercel/analytics": "^1.5.0",
     "axios": "^1.12.2",
+    "canvas-confetti": "^1.9.4",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "framer-motion": "^12.23.13",
+    "gsap": "^3.15.0",
+    "howler": "^2.2.4",
     "lucide-react": "^0.544.0",
     "matter-js": "^0.20.0",
     "next-themes": "^0.4.6",
@@ -42,10 +48,15 @@
     "react-dom": "^19.1.0",
     "react-intersection-observer": "^9.16.0",
     "react-router-dom": "^6.30.1",
-    "vite": "^7.0.4"
+    "vite": "^7.0.4",
+    "zustand": "^5.0.16"
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",
+    "@playwright/test": "^1.64.1",
+    "@types/canvas-confetti": "^1.9.0",
+    "@types/howler": "^2.2.13",
+    "@types/matter-js": "^0.20.2",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.6.0",
@@ -57,6 +68,7 @@
     "globals": "^16.3.0",
     "postcss": "^8.5.6",
     "sharp": "^0.34.4",
-    "tailwindcss": "^3.4.17"
+    "tailwindcss": "^3.4.17",
+    "typescript": "^7.0.2"
   }
 }
