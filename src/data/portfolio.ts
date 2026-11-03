@@ -31,6 +31,8 @@ export interface Project {
   video?: string;
   liveUrl?: string; // absolute URL or internal route
   repoUrl?: string;
+  /** public demo credentials the owner chose to publish */
+  demoLogin?: { username: string; password: string; note?: string };
   color?: string;
 }
 
@@ -71,6 +73,7 @@ function toProject(p: Raw): Project {
     video: p.video ?? gallery.find(isVideo),
     liveUrl: live ? internal[live] ?? live : undefined,
     repoUrl: realUrl(p.links?.github),
+    demoLogin: p.demoLogin,
     color: p.color,
   };
 }

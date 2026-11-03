@@ -1,6 +1,6 @@
 import { lazy, Suspense, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, Check, CodeXml, ExternalLink, Maximize2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, CodeXml, Copy, ExternalLink, KeyRound, Maximize2 } from 'lucide-react';
 import type { Project } from '../data/portfolio';
 import { ButtonLink } from '../components/ui/Button';
 import { CoverImage, CoverPlaceholder } from './covers';
@@ -8,6 +8,47 @@ import ProjectHighlightsMarquee from '../components/ProjectHighlightsMarquee.jsx
 import './showroom.css';
 
 const LightboxGallery = lazy(() => import('../components/LightboxGallery.jsx'));
+
+/** Public demo credentials for a live app, with copy buttons. */
+function DemoLogin({ login }: { login: NonNullable<Project['demoLogin']> }) {
+  const [copied, setCopied] = useState<string | null>(null);
+  const copy = (label: string, value: string) => {
+    navigator.clipboard?.writeText(value).then(
+      () => {
+        setCopied(label);
+        setTimeout(() => setCopied(null), 1600);
+      },
+      () => {},
+    );
+  };
+  const rows: [string, string][] = [
+    ['Username', login.username],
+    ['Password', login.password],
+  ];
+  return (
+    <div className="cs-demo">
+      <p className="mono-label text-accent-text">
+        <KeyRound size={13} aria-hidden className="mr-1.5 inline" />
+        Demo login
+      </p>
+      <dl className="cs-demo__rows">
+        {rows.map(([label, value]) => (
+          <div key={label} className="cs-demo__row">
+            <dt className="mono-label text-ink-3">{label}</dt>
+            <dd className="font-mono text-ink">{value}</dd>
+            <button type="button" className="cs-demo__copy" onClick={() => copy(label, value)} aria-label={`Copy ${label.toLowerCase()}`}>
+              {copied === label ? <Check size={14} aria-hidden /> : <Copy size={14} aria-hidden />}
+            </button>
+          </div>
+        ))}
+      </dl>
+      {login.note && <p className="mt-2 text-sm text-ink-3">{login.note}</p>}
+      <span className="sr-only" aria-live="polite">
+        {copied ? `${copied} copied` : ''}
+      </span>
+    </div>
+  );
+}
 
 function Section({ id, n, title, children }: { id: string; n: number; title: string; children: ReactNode }) {
   return (
@@ -200,6 +241,7 @@ export function CaseStudy({ project: p, prev, next }: { project: Project; prev: 
               </ButtonLink>
             )}
           </div>
+          {p.demoLogin && <DemoLogin login={p.demoLogin} />}
         </div>
       )}
 

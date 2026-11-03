@@ -817,3 +817,10 @@
   background: rgba(15, 18, 40, 0.88); color: var(--mint); font-size: 0.62rem;
 }
 .sr-card__live-dot { width: 7px; height: 7px; border-radius: 99px; background: var(--mint); box-shadow: 0 0 0 3px rgba(121, 216, 160, 0.25); }
+
+/* demo credentials under the "See it for real" CTA */
+.cs-demo { margin-top: 0.25rem; padding: 0.9rem 1rem; border-radius: 14px; background: var(--navy); border: 1px dashed var(--line-strong); }
+.cs-demo__rows { margin-top: 0.6rem; display: grid; gap: 0.4rem; }
+.cs-demo__row { display: grid; grid-template-columns: 6rem 1fr auto; align-items: center; gap: 0.75rem; }
+.cs-demo__copy { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 9px; background: var(--navy-2); border: 1px solid var(--line); color: var(--text-2); }
+.cs-demo__copy:hover { color: var(--text); }

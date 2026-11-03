@@ -217,6 +217,7 @@ export const featuredProjects = [
       live: 'https://rage-fitness-gym.vercel.app/v2/',
     }),
     url: 'https://rage-fitness-gym.vercel.app/v2/',
+    demoLogin: { username: 'master', password: 'admin777', note: 'Demo account for the v2 management app.' },
   },
   {
     id: 'urbancare',
@@ -822,6 +823,8 @@ export const otherProjects = [
     metrics: [],
     color: '#42BDF5',
     gradient: 'from-sky-400 to-blue-500',
+    image: liveAssets.medops,
+    gallery: [liveAssets.medops],
     links: buildLinks({
       live: null,
     }),
