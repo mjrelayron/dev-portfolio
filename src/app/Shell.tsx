@@ -11,6 +11,8 @@ import { useAchievements } from '../store/useAchievements';
 import { ClientOnly } from '../components/ui/ClientOnly';
 
 const ChatWidget = lazy(() => import('../components/ChatWidget.jsx'));
+// completes Project Explorer missions when a target case study is visited (lazy: keeps data out of the entry)
+const MissionTracker = lazy(() => import('../arcade/MissionTracker').then((m) => ({ default: m.MissionTracker })));
 
 /** Persistent chrome: the hub map (kept mounted so zooms can reverse), HUD, toasts, chat. */
 export function Shell({ pathname, children }: { pathname: string; children: ReactNode }) {
@@ -61,6 +63,11 @@ export function Shell({ pathname, children }: { pathname: string; children: Reac
       </main>
 
       <Toasts />
+      <ClientOnly>
+        <Suspense fallback={null}>
+          <MissionTracker />
+        </Suspense>
+      </ClientOnly>
       {mode !== 'os' && (
         <ClientOnly>
           <Suspense fallback={null}>

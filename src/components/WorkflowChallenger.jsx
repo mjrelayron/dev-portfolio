@@ -223,10 +223,10 @@ const WorkflowChallenger = () => {
   ];
 
   const difficultyLevels = [
-    { id: 'all', label: 'All Levels', color: 'bg-gray-100 text-gray-800' },
-    { id: 'beginner', label: 'Beginner', color: 'bg-green-100 text-green-800' },
-    { id: 'intermediate', label: 'Intermediate', color: 'bg-yellow-100 text-yellow-800' },
-    { id: 'advanced', label: 'Advanced', color: 'bg-orange-100 text-orange-800' }
+    { id: 'all', label: 'All Levels', color: 'wc-level' },
+    { id: 'beginner', label: 'Beginner', color: 'wc-level wc-level--beginner' },
+    { id: 'intermediate', label: 'Intermediate', color: 'wc-level wc-level--intermediate' },
+    { id: 'advanced', label: 'Advanced', color: 'wc-level wc-level--advanced' }
   ];
 
   // YouTube API Integration with key rotation
@@ -483,11 +483,11 @@ const WorkflowChallenger = () => {
 
   if (!selectedTool) {
     return (
-      <section className="py-12 md:py-16">
-        <div className="max-w-6xl mx-auto px-4">
+      <section className="py-1">
+        <div className="mx-auto max-w-6xl">
           <div className="mb-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">Choose Your Automation Tool</h2>
-            <p className="text-gray-300 text-lg">
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-white mb-2">Choose Your Automation Tool</h2>
+            <p className="text-gray-300">
               Select your preferred automation tool to get personalized tutorials and challenges
             </p>
           </div>
@@ -497,27 +497,27 @@ const WorkflowChallenger = () => {
               <div
                 key={tool.id}
                 onClick={() => tool.available && setSelectedTool(tool.id)}
-                className={`relative bg-white/5 border border-white/10 rounded-xl p-6 transition-all ${
+                className={`wc-card relative p-6 transition-all ${
                   tool.available 
-                    ? 'hover:border-cyan-400/40 hover:bg-white/10 cursor-pointer' 
-                    : 'opacity-60 cursor-not-allowed'
+                    ? 'wc-card--action cursor-pointer' 
+                    : 'wc-card--soon cursor-not-allowed'
                 } group`}
               >
                 {tool.comingSoon && (
-                  <div className="absolute top-4 right-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                  <div className="wc-badge absolute top-4 right-4">
                     Coming Soon
                   </div>
                 )}
                 <div className="flex items-start space-x-4">
-                  <div className={`w-16 h-16 rounded-lg bg-gradient-to-r ${tool.color} flex items-center justify-center text-2xl ${!tool.available && 'grayscale'}`}>
+                  <div className={`wc-tool-icon w-16 h-16 rounded-[14px] bg-gradient-to-r ${tool.color} flex items-center justify-center text-2xl ${!tool.available && 'grayscale'}`}>
                     {tool.icon}
                   </div>
                   <div className="flex-1">
                     <h3 className="text-xl font-semibold text-white mb-2">{tool.name}</h3>
                     <p className="text-gray-300 mb-4">{tool.description}</p>
                     {tool.comingSoon && (
-                      <div className="mb-3 px-3 py-1.5 bg-amber-500/10 border border-amber-500/20 rounded-lg">
-                        <p className="text-sm text-amber-400 font-medium">
+                      <div className="wc-note mb-3 px-3 py-1.5">
+                        <p className="text-sm font-medium wc-note__text">
                           🎬 Curating high-quality videos for you...
                         </p>
                       </div>
@@ -543,47 +543,47 @@ const WorkflowChallenger = () => {
   const selectedToolData = tools.find(tool => tool.id === selectedTool);
 
   return (
-    <section className="py-8 md:py-10">
-      <div className="max-w-7xl mx-auto px-4">
+    <section className="py-1">
+      <div className="mx-auto max-w-7xl">
         {/* Header */}
-        <div className="relative overflow-hidden">
+        <div className="wc-hero relative overflow-hidden">
           {/* Background with animated gradient */}
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700"></div>
-          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-white/10"></div>
+          <div className="wc-hero__bg absolute inset-0"></div>
+          <div className="hidden"></div>
           
           {/* Animated background elements */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl transform translate-x-32 -translate-y-32"></div>
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-cyan-400/20 rounded-full blur-2xl transform -translate-x-24 translate-y-24"></div>
+          <div className="hidden"></div>
+          <div className="hidden"></div>
           
-          <div className="relative z-10 text-white p-8 rounded-2xl">
+          <div className="relative z-10 text-white p-6 md:p-8">
             <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center space-y-6 lg:space-y-0">
               {/* Left Content */}
               <div className="flex items-start space-x-6">
                 <div className="relative">
-                  <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center text-3xl shadow-2xl">
+                  <div className="wc-tool-icon w-16 h-16 rounded-[14px] bg-navy flex items-center justify-center text-3xl">
                     {selectedToolData.icon}
                   </div>
-                  <div className="absolute -inset-1 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-2xl blur opacity-30"></div>
+                  <div className="hidden"></div>
                 </div>
                 <div className="flex-1">
-                  <h2 className="text-3xl lg:text-4xl font-bold mb-2 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+                  <h2 className="font-display text-2xl lg:text-3xl font-bold mb-2 text-white">
                     {selectedToolData.name} Learning Hub
                   </h2>
-                  <p className="text-blue-100 text-lg">Master automation with personalized content and real-world challenges</p>
+                  <p className="text-gray-300">Master automation with personalized content and real-world challenges</p>
                 </div>
               </div>
               {/* Right Content - Action Buttons */}
               <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4">
                 <button 
                   onClick={() => setSelectedTool(null)}
-                  className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm hover:bg-white/20 border border-white/20 hover:border-white/30 px-4 py-3 rounded-xl transition-all duration-200 text-sm font-medium shadow-lg hover:shadow-xl"
+                  className="btn-3d btn-3d--ghost btn-3d--sm"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   <span>Change Tool</span>
                 </button>
                 <button 
                   onClick={() => navigate('/')}
-                  className="flex items-center space-x-2 bg-gradient-to-r from-white/20 to-white/30 backdrop-blur-sm hover:from-white/30 hover:to-white/40 border border-white/30 hover:border-white/40 px-6 py-3 rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105"
+                  className="btn-3d btn-3d--sm"
                 >
                   <Home className="w-4 h-4" />
                   <span>Visit My Portfolio</span>
@@ -595,13 +595,13 @@ const WorkflowChallenger = () => {
 
         {/* Login Tip Section - Separate */}
         <div className="mt-6 mb-4">
-          <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 backdrop-blur-sm rounded-xl p-4 border border-amber-400/20">
+          <div className="wc-note wc-noop p-4">
             <div className="flex flex-col sm:flex-row items-center justify-between space-y-3 sm:space-y-0">
               <div className="flex items-center space-x-3">
-                <div className="w-3 h-3 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full animate-pulse"></div>
-                <span className="text-amber-100 font-medium">💡 <strong>Pro Tip:</strong> Login to save your progress and unlock personalized recommendations</span>
+                <div className="wc-dot shrink-0"></div>
+                <span className="text-gray-200 font-medium">💡 <strong>Pro Tip:</strong> Login to save your progress and unlock personalized recommendations</span>
               </div>
-              <button className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 whitespace-nowrap">
+              <button className="btn-3d btn-3d--ghost btn-3d--sm whitespace-nowrap">
                 Login Now
               </button>
             </div>
@@ -610,7 +610,7 @@ const WorkflowChallenger = () => {
 
         {/* Navigation Tabs */}
         <div className="border-b border-white/10 mt-4">
-          <div className="flex space-x-8 px-2">
+          <div className="flex gap-2 overflow-x-auto px-1 pb-2 scrollbar-none">
             {[
               { id: 'tutorials', label: 'Tutorials', icon: BookOpen },
               { id: 'challenges', label: 'Challenges', icon: Target },
@@ -619,10 +619,10 @@ const WorkflowChallenger = () => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center space-x-2 py-4 px-2 transition-colors ${
+                className={`wc-tab flex items-center gap-2 py-2.5 px-3 whitespace-nowrap ${
                   activeTab === tab.id
-                    ? 'text-cyan-300 bg-cyan-400/10 rounded-lg'
-                    : 'text-gray-300 hover:text-white hover:bg-white/5 rounded-lg'
+                    ? 'is-active'
+                    : ''
                 }`}
               >
                 <tab.icon className="w-5 h-5" />
@@ -646,13 +646,13 @@ const WorkflowChallenger = () => {
                       placeholder="Search tutorials..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 border border-white/10 bg-white/5 text-white placeholder-gray-400 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                      className="wc-input w-full pl-10 pr-4 py-3"
                     />
                   </div>
                   <select
                     value={difficultyFilter}
                     onChange={(e) => handleDifficultyChange(e.target.value)}
-                    className="px-4 py-3 border border-white/10 bg-gray-800 text-white rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                    className="wc-input px-4 py-3"
                     style={{ colorScheme: 'dark' }}
                   >
                     {difficultyLevels.map(level => (
@@ -661,7 +661,7 @@ const WorkflowChallenger = () => {
                   </select>
                   <button
                     type="submit"
-                    className="px-6 py-3 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors flex items-center space-x-2"
+                    className="btn-3d"
                   >
                     <Search className="w-4 h-4" />
                     <span>Search</span>
@@ -684,7 +684,7 @@ const WorkflowChallenger = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
                   {filteredTutorials.map((tutorial) => (
-                    <div key={tutorial.id} className="bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:border-cyan-400/40 transition">
+                    <div key={tutorial.id} className="wc-card wc-card--action overflow-hidden">
                       <div className="relative">
                         <img
                           src={tutorial.thumbnail}
@@ -698,7 +698,7 @@ const WorkflowChallenger = () => {
                             {difficultyLevels.find(d => d.id === tutorial.difficulty)?.label}
                           </span>
                         </div>
-                        <div className="absolute bottom-2 left-2 flex items-center space-x-2 text-white bg-black/60 px-2 py-1 rounded">
+                        <div className="absolute bottom-2 left-2 flex items-center space-x-2 text-white bg-[rgba(13,16,36,0.85)] px-2 py-1 rounded-md">
                           <Clock className="w-4 h-4" />
                           <span className="text-sm">{tutorial.duration ? formatDuration(tutorial.duration) : 'N/A'}</span>
                         </div>
@@ -714,7 +714,7 @@ const WorkflowChallenger = () => {
                         )}
                         {tutorial.isSeries && (
                           <div className="absolute top-2 left-2">
-                            <span className="px-2 py-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-medium rounded-full">
+                            <span className="wc-badge">
                               {tutorial.seriesType} {tutorial.seriesNumber}
                             </span>
                           </div>
@@ -825,7 +825,7 @@ const WorkflowChallenger = () => {
                         {tutorial.tags && tutorial.tags.length > 0 && (
                           <div className="flex flex-wrap gap-1 mb-3">
                             {tutorial.tags.slice(0, 3).map((tag, index) => (
-                              <span key={index} className="px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded">
+                              <span key={index} className="chip">
                                 #{tag}
                               </span>
                             ))}
@@ -833,7 +833,7 @@ const WorkflowChallenger = () => {
                         )}
                         <button 
                           onClick={() => window.open(tutorial.url || `https://www.youtube.com/watch?v=${tutorial.videoId || tutorial.id}`, '_blank')}
-                          className="w-full bg-cyan-600 text-white py-2 px-4 rounded-lg hover:bg-cyan-700 transition-colors flex items-center justify-center space-x-2"
+                          className="btn-3d btn-3d--sm w-full"
                         >
                           <Play className="w-4 h-4" />
                           <span>Watch Tutorial</span>
@@ -875,25 +875,25 @@ const WorkflowChallenger = () => {
 
                   {/* Scraped Videos Information */}
                   {apiStatus === 'cached' && tutorials.videos && tutorials.videos.length > 0 && (
-                    <div className="col-span-full bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+                    <div className="col-span-full wc-note p-4 mb-4 mt-6">
                       <div className="flex items-start space-x-3">
                         <div className="flex-shrink-0">
-                          <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                          <div className="w-8 h-8 bg-navy rounded-full flex items-center justify-center">
                             <span className="text-green-600 text-sm">🤖</span>
                           </div>
                         </div>
                         <div className="flex-1">
-                          <h3 className="text-sm font-medium text-green-800 mb-2">
+                          <h3 className="text-sm font-medium text-white mb-2">
                             AI-Powered Video Discovery
                           </h3>
-                          <p className="text-sm text-green-700 mb-3">
+                          <p className="text-sm text-gray-300 mb-3">
                             These videos are intelligently scraped and analyzed using AI to provide you with the highest quality automation tutorials. Each video is scored for quality and usefulness.
                           </p>
                           <div className="flex flex-wrap gap-2 text-xs">
-                            <span className="text-gray-600">Features:</span>
-                            <span className="bg-green-200 px-2 py-1 rounded text-green-800">🤖 AI-analyzed content</span>
-                            <span className="bg-green-200 px-2 py-1 rounded text-green-800">⭐ Quality scored</span>
-                            <span className="bg-green-200 px-2 py-1 rounded text-green-800">🔄 Auto-updated</span>
+                            <span className="text-gray-400">Features:</span>
+                            <span className="chip">🤖 AI-analyzed content</span>
+                            <span className="chip">⭐ Quality scored</span>
+                            <span className="chip">🔄 Auto-updated</span>
                           </div>
                         </div>
                       </div>
@@ -913,7 +913,7 @@ const WorkflowChallenger = () => {
                           setDifficultyFilter('beginner');
                           searchYouTubeTutorials(selectedTool, '', 'beginner');
                         }}
-                        className="bg-cyan-600 text-white px-6 py-3 rounded-lg hover:bg-cyan-700 transition-colors"
+                        className="btn-3d"
                       >
                         Reset Filters
                       </button>
@@ -934,7 +934,7 @@ const WorkflowChallenger = () => {
               {/* Challenges List */}
               <div className="space-y-6">
                 {mockChallenges.map((challenge) => (
-                  <div key={challenge.id} className="bg-white/5 border border-white/10 rounded-xl p-6 hover:border-cyan-400/40 transition">
+                  <div key={challenge.id} className="wc-card p-6">
                     <div className="flex justify-between items-start mb-4">
                       <div className="flex-1">
                         <div className="flex items-center space-x-3 mb-2">
@@ -948,7 +948,7 @@ const WorkflowChallenger = () => {
                         <p className="text-gray-300 mb-4">{challenge.description}</p>
                         <div className="flex flex-wrap gap-2 mb-4">
                           {challenge.tags.map((tag, index) => (
-                            <span key={index} className="px-2 py-1 bg-white/10 text-gray-200 text-sm rounded-full">
+                            <span key={index} className="chip">
                               #{tag}
                             </span>
                           ))}
@@ -971,7 +971,7 @@ const WorkflowChallenger = () => {
                           <span>{challenge.submissions} submissions</span>
                         </div>
                       </div>
-                      <button className="bg-cyan-600 text-white px-6 py-2 rounded-lg hover:bg-cyan-700 transition-colors flex items-center space-x-2">
+                      <button className="btn-3d btn-3d--sm wc-noop">
                         <Target className="w-4 h-4" />
                         <span>Start Challenge</span>
                       </button>
@@ -991,14 +991,14 @@ const WorkflowChallenger = () => {
               
               <div className="grid gap-6">
                 {/* Recommended Tutorials */}
-                <div className="bg-gray-800/50 rounded-xl p-6">
+                <div className="wc-card p-6">
                   <div className="flex items-center space-x-2 mb-4">
                     <BookOpen className="w-5 h-5 text-cyan-400" />
                     <h4 className="text-lg font-semibold text-white">Tutorials You Might Like</h4>
                   </div>
                   <div className="space-y-4">
                     {tutorials.length > 0 ? tutorials.slice(0, 2).map((tutorial) => (
-                      <div key={tutorial.id} className="flex items-center space-x-4 p-4 bg-gray-700/50 rounded-lg hover:bg-gray-700/70 transition-colors cursor-pointer">
+                      <div key={tutorial.id} className="wc-row flex items-center space-x-4 p-4">
                         <img 
                           src={tutorial.thumbnail} 
                           alt={tutorial.title}
@@ -1023,26 +1023,26 @@ const WorkflowChallenger = () => {
                 </div>
 
                 {/* Recommended Challenges */}
-                <div className="bg-gray-800/50 rounded-xl p-6">
+                <div className="wc-card p-6">
                   <div className="flex items-center space-x-2 mb-4">
                     <Target className="w-5 h-5 text-cyan-400" />
                     <h4 className="text-lg font-semibold text-white">Challenges for Your Level</h4>
                   </div>
                   <div className="space-y-4">
                     {mockChallenges.slice(0, 2).map((challenge) => (
-                      <div key={challenge.id} className="p-4 bg-gray-700/50 rounded-lg hover:bg-gray-700/70 transition-colors cursor-pointer">
+                      <div key={challenge.id} className="wc-row p-4">
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
                             <h5 className="text-white font-medium mb-2">{challenge.title}</h5>
                             <p className="text-gray-300 text-sm mb-3">{challenge.description}</p>
                             <div className="flex items-center space-x-4 text-sm text-gray-400">
-                              <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
+                              <span className="wc-level wc-level--beginner">
                                 {challenge.difficulty}
                               </span>
                               <span>{challenge.estimatedTime}</span>
                             </div>
                           </div>
-                          <button className="bg-cyan-600 text-white px-4 py-2 rounded-lg hover:bg-cyan-700 transition-colors text-sm">
+                          <button className="btn-3d btn-3d--sm wc-noop">
                             Try It
                           </button>
                         </div>

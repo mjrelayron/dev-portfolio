@@ -1,10 +1,16 @@
-import { PageFrame } from '../app/PageFrame';
+import { Seo } from '../app/Seo';
+import { ArcadeHub } from '../arcade/ArcadeHub';
+import '../arcade/arcade.css';
 
-// TEMP stub — replaced in a later phase.
 export default function ArcadePage() {
   return (
-    <PageFrame accent="violet" eyebrow="Arcade" title="Arcade">
-      <p className="text-ink-2">Arcade</p>
-    </PageFrame>
+    <>
+      <Seo
+        title="Arcade"
+        description="Mini-games built into the portfolio: Stack Builder, Bug Hunter, Project Explorer and Workflow Challenger — plus the achievement trophy case."
+        path="/arcade"
+      />
+      <ArcadeHub />
+    </>
   );
 }
