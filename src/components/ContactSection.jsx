@@ -294,7 +294,7 @@ const ContactSection = () => {
               </p>
               <div className="flex justify-center">
                 <a 
-                  href="/src/assets/Resume.pdf" 
+                  href="/resume/MJR-Elayron-Resume.pdf" 
                   download
                 className={resumeButtonClass}
                 >

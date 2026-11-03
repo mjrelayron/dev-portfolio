@@ -453,7 +453,7 @@ const HeroSection = () => {
                 </button>
                 
                 <a 
-                  href="/src/assets/Resume.pdf" 
+                  href="/resume/MJR-Elayron-Resume.pdf" 
                   download
                   className="btn btn-secondary"
                 >
