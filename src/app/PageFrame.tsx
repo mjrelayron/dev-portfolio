@@ -43,7 +43,7 @@ export function PageFrame({
           </div>
           {bot && (
             <div className="hidden shrink-0 self-end sm:block">
-              <DevBot size="md" state={bot.state ?? 'idle'} bubble={bot.bubble} />
+              <DevBot size="md" state={bot.state ?? 'idle'} bubble={bot.bubble} bubbleAlign="end" />
             </div>
           )}
         </header>

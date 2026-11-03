@@ -15,13 +15,15 @@ export interface DevBotProps {
   className?: string;
   /** accessible description; the bot is decorative unless this is set */
   label?: string;
+  /** where the speech bubble anchors; 'end' keeps it inside right-hand layouts */
+  bubbleAlign?: 'center' | 'end';
 }
 
 /**
  * The one mascot component. Renders the Rive file when /rive/devbot.riv
  * exists, otherwise the SVG fallback — dropping the .riv in needs no code change.
  */
-export function DevBot({ state = 'idle', lookAt, size = 'md', bubble, className = '', label }: DevBotProps) {
+export function DevBot({ state = 'idle', lookAt, size = 'md', bubble, className = '', label, bubbleAlign = 'center' }: DevBotProps) {
   const reduced = useReducedMotion();
   const [useRiveBot, setUseRiveBot] = useState(false);
   const [bubbleOpen, setBubbleOpen] = useState(true);
@@ -44,7 +46,7 @@ export function DevBot({ state = 'idle', lookAt, size = 'md', bubble, className 
     <div className={`relative inline-flex flex-col items-center ${className}`} role={label ? 'img' : undefined} aria-label={label}>
       {bubble && bubbleOpen && (
         <div
-          className="devbot-bubble pointer-events-auto absolute bottom-full mb-2 w-max max-w-[15rem] rounded-2xl border border-line bg-white px-3 py-2 pr-7 text-left text-[0.8rem] font-medium leading-snug text-navy shadow-lg"
+          className={`devbot-bubble pointer-events-auto absolute bottom-full mb-2 w-max ${bubbleAlign === 'end' ? 'right-0' : 'left-1/2 -translate-x-1/2'} max-w-[15rem] rounded-2xl border border-line bg-white px-3 py-2 pr-7 text-left text-[0.8rem] font-medium leading-snug text-navy shadow-lg`}
           role="status"
         >
           {bubble}
